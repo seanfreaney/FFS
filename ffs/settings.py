@@ -44,6 +44,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'home',
     'profiles',
+
+    # other apps
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +62,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ffs.urls'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
