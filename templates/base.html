@@ -69,7 +69,16 @@
     </header>
 
     {% if messages %}
-        <div class="message-container"></div>
+        <div class="message-container">
+            <strong>Messages:</strong>
+            <ul>
+              {% for message in messages %}
+                {% if forloop.last %}
+                <li>{{ message }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
     {% block page_header %}
