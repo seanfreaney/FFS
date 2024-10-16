@@ -52,8 +52,16 @@
           </form> -->
 
           <div class="text-end">
-            <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Login</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-warning">Sign-up</a>
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                  <a href="" class="btn btn-outline-light me-2">Management</a> <!-- UPDATE for Management/Admin -->
+                {% endif %}
+                <a href="{% url 'profile' %}" class="btn btn-outline-light me-2">My Profile</a>
+                <a href="{% url 'account_logout' %}" class="btn btn-outline-light me-2">Logout</a>
+            {% else %}
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light me-2">Register</a>
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Login</a>
+            {% endif %}
         </div>
         
         </div>
