@@ -41,7 +41,10 @@
   
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="{% url 'home' %}" class="nav-link px-2 text-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">TBU</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'create_service_request' %}" class="nav-link px-2 text-white">New Service Request</a></li>
+              <li><a href="{% url 'service_request_list' %}" class="nav-link px-2 text-white">My Service Requests</a></li>
+            {% endif %}
             <li><a href="#" class="nav-link px-2 text-white">TBU</a></li>
             <li><a href="#" class="nav-link px-2 text-white">TBU</a></li>
           </ul>
