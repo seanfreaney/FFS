@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Service Request Details</h1>
+    <p>Request Number: {{ service_request.request_number }}</p>
+    <p>Business Type: {{ service_request.business_type }}</p>
+    <p>Monthly Revenue: {{ service_request.monthly_revenue }}</p>
+    <p>Monthly Transactions: {{ service_request.monthly_transactions }}</p>
+    <p>Monthly Operating Costs: {{ service_request.monthly_operating_costs }}</p>
+    <p>Quote Amount: {{ service_request.quote_amount }}</p>
+    <p>Quote Accepted: {{ service_request.quote_accepted }}</p>
+    <p>Status: {{ service_request.status }}</p>
+    <p>Created On: {{ service_request.created_on }}</p>
+{% endblock %}
