@@ -12,6 +12,7 @@ def create_service_request(request):
             service_request = form.save(commit=False)
             service_request.user = request.user
             service_request.status = 'pending'
+            service_request.quote_amount = None  # Set to None initially
             service_request.save()
             return redirect('service_request_detail', request_number=service_request.request_number)
     else:

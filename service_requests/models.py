@@ -18,7 +18,7 @@ class ServiceRequest(models.Model):
     monthly_revenue = models.DecimalField(max_digits=10, decimal_places=2)
     monthly_transactions = models.IntegerField()
     monthly_operating_costs = models.DecimalField(max_digits=10, decimal_places=2)
-    quote_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    quote_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     quote_accepted = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     created_on = models.DateTimeField(auto_now_add=True)
