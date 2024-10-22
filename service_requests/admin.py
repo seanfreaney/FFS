@@ -17,9 +17,9 @@ class DocumentInline(admin.TabularInline):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('service_request', 'file', 'is_bank_statement', 'is_completed_file', 'uploaded_at', 'uploaded_by')
-    list_filter = ('is_bank_statement', 'is_completed_file', 'uploaded_at')
-    search_fields = ('service_request__request_number', 'file')
+    list_display = ['service_request', 'file', 'uploaded_at', 'uploaded_by']
+    list_filter = ['uploaded_at', 'uploaded_by']
+    search_fields = ['service_request__request_number', 'file']
     readonly_fields = ('uploaded_at',)
 
     def save_model(self, request, obj, form, change):

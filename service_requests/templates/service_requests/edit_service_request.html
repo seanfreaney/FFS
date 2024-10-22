@@ -3,9 +3,14 @@
 
 {% block content %}
     <h1>Edit Service Request</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <h2>Service Request Details</h2>
         {{ form|crispy }}
+        
+        <h2>Update Document</h2>
+        {{ document_form|crispy }}
+        
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 {% endblock %}

@@ -27,9 +27,16 @@ class Document(models.Model):
     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, related_name='documents')
     file = models.FileField(upload_to='documents/')
     is_bank_statement = models.BooleanField(default=True)
-    is_completed_file = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Document for {self.service_request.request_number}"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            # If this is an update, delete the old file
+            old_document = Document.objects.get(pk=self.pk)
+            if old_document.file != self.file:
+                old_document.file.delete(save=False)
+        super().save(*args, **kwargs)

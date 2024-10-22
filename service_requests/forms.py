@@ -10,3 +10,7 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ['file', 'is_bank_statement']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['file'].required = False  

@@ -41,14 +41,30 @@ def service_request_list(request):
 @login_required
 def edit_service_request(request, request_number):
     service_request = get_object_or_404(ServiceRequest, request_number=request_number, user=request.user)
-    
+    document = service_request.documents.first()  # Assuming one document per request
+
     if request.method == 'POST':
         form = ServiceRequestForm(request.POST, instance=service_request)
-        if form.is_valid():
+        document_form = DocumentForm(request.POST, request.FILES, instance=document)
+        
+        if form.is_valid() and document_form.is_valid():
             form.save()
+            if document:
+                document_form.save()
+            else:
+                new_document = document_form.save(commit=False)
+                new_document.service_request = service_request
+                new_document.uploaded_by = request.user
+                new_document.save()
+            
             messages.success(request, 'Service request updated successfully.')
             return redirect('service_request_detail', request_number=service_request.request_number)
     else:
         form = ServiceRequestForm(instance=service_request)
+        document_form = DocumentForm(instance=document)
     
-    return render(request, 'service_requests/edit_service_request.html', {'form': form, 'service_request': service_request})
+    return render(request, 'service_requests/edit_service_request.html', {
+        'form': form,
+        'document_form': document_form,
+        'service_request': service_request
+    })

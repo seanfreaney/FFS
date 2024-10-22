@@ -12,20 +12,18 @@
     <p>Status: {{ service_request.status }}</p>
     <p>Created On: {{ service_request.created_on }}</p>
     
-    <h2>Uploaded Documents</h2>
-    {% if documents %}
-        <ul>
-        {% for document in documents %}
-            <li>
+    <h2>Current Document</h2>
+    {% with document=service_request.documents.first %}
+        {% if document %}
+            <p>
                 {{ document.file.name }} 
                 ({% if document.is_bank_statement %}Bank Statement{% else %}Other Document{% endif %})
                 - Uploaded on {{ document.uploaded_at }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No documents uploaded yet.</p>
-    {% endif %}
+            </p>
+        {% else %}
+            <p>No document uploaded yet.</p>
+        {% endif %}
+    {% endwith %}
     
-    <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request</a>
+    <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
 {% endblock %}
