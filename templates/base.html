@@ -71,15 +71,12 @@
     </header>
 
     {% if messages %}
-        <div class="message-container">
-            <strong>Messages:</strong>
-            <ul>
-              {% for message in messages %}
-                {% if forloop.last %}
-                <li>{{ message }}</li>
-                {% endif %}
-              {% endfor %}
-            </ul>
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
 
