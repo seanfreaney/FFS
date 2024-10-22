@@ -11,4 +11,19 @@
     <p>Quote Accepted: {{ service_request.quote_accepted }}</p>
     <p>Status: {{ service_request.status }}</p>
     <p>Created On: {{ service_request.created_on }}</p>
+    
+    <h2>Uploaded Documents</h2>
+    {% if documents %}
+        <ul>
+        {% for document in documents %}
+            <li>
+                {{ document.file.name }} 
+                ({% if document.is_bank_statement %}Bank Statement{% else %}Other Document{% endif %})
+                - Uploaded on {{ document.uploaded_at }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No documents uploaded yet.</p>
+    {% endif %}
 {% endblock %}

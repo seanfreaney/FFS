@@ -29,7 +29,8 @@ def create_service_request(request):
 @login_required
 def service_request_detail(request, request_number):
     service_request = get_object_or_404(ServiceRequest, request_number=request_number, user=request.user)
-    return render(request, 'service_requests/service_request_detail.html', {'service_request': service_request})
+    documents = service_request.documents.all()
+    return render(request, 'service_requests/service_request_detail.html', {'service_request': service_request, 'documents': documents})
 
 @login_required
 def service_request_list(request):
