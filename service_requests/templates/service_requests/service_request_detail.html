@@ -26,4 +26,6 @@
     {% else %}
         <p>No documents uploaded yet.</p>
     {% endif %}
+    
+    <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request</a>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import ServiceRequest, Document
 from .forms import ServiceRequestForm, DocumentForm
 
@@ -36,3 +37,18 @@ def service_request_detail(request, request_number):
 def service_request_list(request):
     service_requests = ServiceRequest.objects.filter(user=request.user)
     return render(request, 'service_requests/service_request_list.html', {'service_requests': service_requests})
+
+@login_required
+def edit_service_request(request, request_number):
+    service_request = get_object_or_404(ServiceRequest, request_number=request_number, user=request.user)
+    
+    if request.method == 'POST':
+        form = ServiceRequestForm(request.POST, instance=service_request)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Service request updated successfully.')
+            return redirect('service_request_detail', request_number=service_request.request_number)
+    else:
+        form = ServiceRequestForm(instance=service_request)
+    
+    return render(request, 'service_requests/edit_service_request.html', {'form': form, 'service_request': service_request})
