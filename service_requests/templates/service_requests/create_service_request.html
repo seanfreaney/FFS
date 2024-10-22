@@ -3,9 +3,11 @@
 
 {% block content %}
     <h1>Create Service Request</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
+        <h2>Upload Document</h2>
+        {{ document_form|crispy }}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 {% endblock %}
