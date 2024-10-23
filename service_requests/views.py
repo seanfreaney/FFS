@@ -20,6 +20,8 @@ def create_service_request(request):
             document.service_request = service_request
             document.uploaded_by = request.user
             document.save()
+
+            messages.success(request, f"Service request #{service_request.request_number} has been successfully submitted.")
             
             return redirect('service_request_detail', request_number=service_request.request_number)
     else:
