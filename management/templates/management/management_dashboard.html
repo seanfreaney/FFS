@@ -2,17 +2,35 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="mt-4">Management Dashboard</h1>
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Service Requests</h5>
-                        <p class="card-text">Manage all service requests</p>
-                        <a href="#" class="btn btn-primary">View Requests</a>
-                    </div>
+<div class="container mt-4">
+    <h1>Management Dashboard</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Requests</h5>
+                    <h2 class="card-text">{{ pending_count }}</h2>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <h2 class="card-text">{{ in_progress_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Completed</h5>
+                    <h2 class="card-text">{{ completed_count }}</h2>
+                </div>
+            </div>
+        </div>
     </div>
+
+</div>
 {% endblock %}
