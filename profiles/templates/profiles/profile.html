@@ -35,7 +35,20 @@
             </form>
         </div>
         <div class="col-12 col-lg-6">
-            <p class="text-muted">Request History</p> <!-- REQUESTS to be added here -->
+            <p class="text-muted">Request History</p>
+            {% if service_requests %}
+            <ul>
+                {% for request in service_requests %}
+                    <li>
+                        <a href="{% url 'service_request_detail' request_number=request.request_number %}">
+                            {{ request.business_type }} - {{ request.status }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no service requests.</p>
+        {% endif %} <!-- REQUESTS to be added here -->
         </div>
     </div>    
 {% endblock %}
