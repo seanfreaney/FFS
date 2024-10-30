@@ -1,11 +1,9 @@
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from service_requests.models import ServiceRequest
-from django.db.models import Count, Q
 
 @staff_member_required
 def management_dashboard(request):
-    # Get counts for different service request statuses
     pending_count = ServiceRequest.objects.filter(status='pending').count()
     in_progress_count = ServiceRequest.objects.filter(status='in_progress').count()
     completed_count = ServiceRequest.objects.filter(status='completed').count()
@@ -16,3 +14,11 @@ def management_dashboard(request):
         'completed_count': completed_count,
     }
     return render(request, 'management/management_dashboard.html', context)
+
+@staff_member_required
+def service_request_management(request):
+    service_requests = ServiceRequest.objects.all().order_by('-created_on')
+    context = {
+        'service_requests': service_requests,
+    }
+    return render(request, 'management/service_request_management.html', context)
