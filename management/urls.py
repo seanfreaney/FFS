@@ -6,4 +6,5 @@ app_name = 'management'
 urlpatterns = [
     path('', views.management_dashboard, name='management_dashboard'),
     path('service-requests/', views.service_request_management, name='service_request_management'),
+    path('service-requests/<uuid:request_number>/', views.service_request_detail, name='service_request_detail'),
 ]

@@ -27,6 +27,11 @@
                         </span>
                     </td>
                     <td>{{ request.created_on|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'management:service_request_detail' request.request_number %}" class="btn btn-sm btn-primary">View Request</a>
+                        </div>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

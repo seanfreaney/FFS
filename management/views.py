@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from service_requests.models import ServiceRequest
 
 @staff_member_required
@@ -22,3 +23,8 @@ def service_request_management(request):
         'service_requests': service_requests,
     }
     return render(request, 'management/service_request_management.html', context)
+
+@staff_member_required
+def service_request_detail(request, request_number):
+    service_request = get_object_or_404(ServiceRequest, request_number=request_number)
+    return render(request, 'management/service_request_detail.html')
