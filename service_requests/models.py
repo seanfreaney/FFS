@@ -10,6 +10,11 @@ STATUS_CHOICES = [
     ('cancelled', 'Cancelled'),
 ]
 
+QUOTE_STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected'),
+]
 
 class ServiceRequest(models.Model):
     request_number = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -21,6 +26,11 @@ class ServiceRequest(models.Model):
     quote_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     quote_accepted = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    quote_status = models.CharField(
+        max_length=20, 
+        choices=QUOTE_STATUS_CHOICES,
+        default='pending'
+    )
     created_on = models.DateTimeField(auto_now_add=True)
 
 class Document(models.Model):

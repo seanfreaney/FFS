@@ -7,10 +7,34 @@
     <p>Monthly Revenue: {{ service_request.monthly_revenue }}</p>
     <p>Monthly Transactions: {{ service_request.monthly_transactions }}</p>
     <p>Monthly Operating Costs: {{ service_request.monthly_operating_costs }}</p>
-    <p>Quote Amount: {{ service_request.quote_amount }}</p>
-    <p>Quote Accepted: {{ service_request.quote_accepted }}</p>
     <p>Status: {{ service_request.status }}</p>
     <p>Created On: {{ service_request.created_on }}</p>
+
+    <h1>Quote Details</h1>
+    <p>Quote Amount: {{ service_request.quote_amount }}</p>
+    <p>Quote Accepted: {{ service_request.quote_accepted }}</p>
+
+    {% if service_request.quote_amount and service_request.quote_status == 'pending' %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Quote Response Required</h5>
+            <p>A quote of ${{ service_request.quote_amount }} has been provided for your service request.</p>
+            <form method="POST" action="{% url 'quote_response' service_request.request_number %}">
+                {% csrf_token %}
+                <button type="submit" name="response" value="accepted" class="btn btn-success me-2">Accept Quote</button>
+                <button type="submit" name="response" value="rejected" class="btn btn-danger">Reject Quote</button>
+            </form>
+        </div>
+    </div>
+    {% elif service_request.quote_amount %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Quote Status</h5>
+            <p>Quote Amount: ${{ service_request.quote_amount }}</p>
+            <p>Status: {{ service_request.get_quote_status_display }}</p>
+        </div>
+    </div>
+    {% endif %}
     
     <h2>Current Document</h2>
     {% with document=service_request.documents.first %}

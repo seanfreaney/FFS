@@ -70,3 +70,20 @@ def edit_service_request(request, request_number):
         'document_form': document_form,
         'service_request': service_request
     })
+
+@login_required
+def quote_response(request, request_number):
+    service_request = get_object_or_404(ServiceRequest, request_number=request_number, user=request.user)
+    
+    if request.method == 'POST' and service_request.quote_status == 'pending':
+        response = request.POST.get('response')
+        if response in ['accepted', 'rejected']:
+            service_request.quote_status = response
+            if response == 'accepted':
+                service_request.status = 'in_progress'
+            service_request.save()
+            messages.success(request, f'Quote has been {response}.')
+        else:
+            messages.error(request, 'Invalid response.')
+    
+    return redirect('service_request_detail', request_number=request_number)
