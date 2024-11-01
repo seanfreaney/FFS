@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from service_requests.models import ServiceRequest
+from service_requests.models import ServiceRequest, STATUS_CHOICES
 
 @staff_member_required
 def management_dashboard(request):
@@ -34,7 +34,7 @@ def service_request_detail(request, request_number):
         status = request.POST.get('status')
         quote_amount = request.POST.get('quote_amount')
         
-        if status and status in dict(ServiceRequest.STATUS_CHOICES):
+        if status and status in dict(STATUS_CHOICES):
             service_request.status = status
         
         if quote_amount:
