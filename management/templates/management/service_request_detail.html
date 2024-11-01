@@ -2,5 +2,72 @@
 {% load static %}
 
 {% block content %}
+<div class="container mt-4">
+    <h1>Service Request Details</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Request #{{ service_request.request_number }}</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Customer:</strong> {{ service_request.user.get_full_name|default:service_request.user.email }}</p>
+                    <p><strong>Business Type:</strong> {{ service_request.business_type }}</p>
+                    <p><strong>Monthly Revenue:</strong> ${{ service_request.monthly_revenue }}</p>
+                    <p><strong>Monthly Transactions:</strong> {{ service_request.monthly_transactions }}</p>
+                    <p><strong>Monthly Operating Costs:</strong> ${{ service_request.monthly_operating_costs }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Status:</strong> 
+                        <span class="badge {% if service_request.status == 'pending' %}bg-warning{% elif service_request.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
+                            {{ service_request.status|title }}
+                        </span>
+                    </p>
+                    <p><strong>Created On:</strong> {{ service_request.created_on|date:"M d, Y" }}</p>
+                    
+                    <form method="POST" class="mb-3">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="status" class="form-label"><strong>Update Status:</strong></label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="pending" {% if service_request.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="in_progress" {% if service_request.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="completed" {% if service_request.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="quote_amount" class="form-label"><strong>Quote Amount:</strong></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="quote_amount" name="quote_amount" 
+                                       value="{{ service_request.quote_amount|default:'' }}" step="0.01" min="0">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Update Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Documents</h5>
+            {% for document in documents %}
+            <div class="mb-3">
+                <p><strong>File:</strong> {{ document.file.name }}</p>
+                <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
+                <a href="{{ document.file.url }}" class="btn btn-primary" target="_blank">Download File</a>
+            </div>
+            {% empty %}
+            <p>No documents attached to this request.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'management:service_request_management' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
 {% endblock %}
