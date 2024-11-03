@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from service_requests.models import ServiceRequest, STATUS_CHOICES
+from service_requests.models import ServiceRequest, Document, STATUS_CHOICES
 
 @staff_member_required
 def management_dashboard(request):
