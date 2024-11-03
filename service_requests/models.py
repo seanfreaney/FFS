@@ -34,11 +34,17 @@ class ServiceRequest(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
 class Document(models.Model):
+    DOCUMENT_TYPE_CHOICES = [
+        ('customer', 'Customer Document'),
+        ('owner', 'Owner Document'),
+    ]
+    
     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE, related_name='documents')
     file = models.FileField(upload_to='documents/')
     is_bank_statement = models.BooleanField(default=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    document_type = models.CharField(max_length=20, choices=DOCUMENT_TYPE_CHOICES, default='customer')
 
     def __str__(self):
         return f"Document for {self.service_request.request_number}"

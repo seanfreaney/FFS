@@ -53,3 +53,21 @@ def service_request_detail(request, request_number):
         'documents': documents,
     }
     return render(request, 'management/service_request_detail.html', context)
+
+@staff_member_required
+def upload_owner_document(request, request_number):
+    service_request = get_object_or_404(ServiceRequest, request_number=request_number)
+    
+    if request.method == 'POST' and request.FILES.get('file'):
+        document = Document.objects.create(
+            service_request=service_request,
+            file=request.FILES['file'],
+            uploaded_by=request.user,
+            document_type='owner',
+            is_bank_statement=False  # Or add a field in the form to specify this
+        )
+        messages.success(request, 'Document uploaded successfully.')
+    else:
+        messages.error(request, 'Please select a file to upload.')
+    
+    return redirect('management:service_request_detail', request_number=request_number)

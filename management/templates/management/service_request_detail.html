@@ -53,16 +53,46 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Documents</h5>
-            {% for document in documents %}
-            <div class="mb-3">
-                <p><strong>File:</strong> {{ document.file.name }}</p>
-                <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
-                <a href="{{ document.file.url }}" class="btn btn-primary" target="_blank">Download File</a>
+            <!-- Customer Documents -->
+            <div class="mb-4">
+                <h6>Customer Documents</h6>
+                {% for document in documents %}
+                    {% if document.document_type == 'customer' %}
+                    <div class="mb-3">
+                        <p><strong>File:</strong> {{ document.file.name }}</p>
+                        <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
+                        <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% empty %}
-            <p>No documents attached to this request.</p>
-            {% endfor %}
+
+            <!-- Owner Documents -->
+            <div class="mb-4">
+                <h6>Owner Documents</h6>
+                {% for document in documents %}
+                    {% if document.document_type == 'owner' %}
+                    <div class="mb-3">
+                        <p><strong>File:</strong> {{ document.file.name }}</p>
+                        <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
+                        <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Upload Owner Document Form -->
+            <div class="mt-4">
+                <h6>Upload Owner Document</h6>
+                <form method="POST" enctype="multipart/form-data" action="{% url 'management:upload_owner_document' service_request.request_number %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="owner_document" class="form-label">Select File</label>
+                        <input type="file" class="form-control" id="owner_document" name="file" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Document</button>
+                </form>
+            </div>
         </div>
     </div>
 
