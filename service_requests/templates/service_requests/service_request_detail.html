@@ -36,9 +36,10 @@
     </div>
     {% endif %}
     
-    <h2>Current Document</h2>
+    <!-- Customer Document Section -->
+    <h2>Your Document</h2>
     {% with document=service_request.documents.first %}
-        {% if document %}
+        {% if document.document_type == 'customer' %}
             <p>
                 {{ document.file.name }} 
                 ({% if document.is_bank_statement %}Bank Statement{% else %}Other Document{% endif %})
@@ -48,6 +49,22 @@
             <p>No document uploaded yet.</p>
         {% endif %}
     {% endwith %}
+
+    <!-- Owner Document Section -->
+    <h2>FFS Documents</h2>
+    {% for document in documents %}
+        {% if document.document_type == 'owner' %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Document from FFS</h5>
+                    <p class="card-text">Uploaded on {{ document.uploaded_at|date:"M d, Y" }}</p>
+                    <a href="{{ document.file.url }}" class="btn btn-primary" target="_blank">Download Document</a>
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p>No documents available yet.</p>
+    {% endfor %}
     
     <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
 {% endblock %}
