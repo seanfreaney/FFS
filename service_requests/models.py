@@ -32,6 +32,8 @@ class ServiceRequest(models.Model):
         default='pending'
     )
     created_on = models.DateTimeField(auto_now_add=True)
+    stripe_payment_intent_id = models.CharField(max_length=255, null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
 
 class Document(models.Model):
     DOCUMENT_TYPE_CHOICES = [

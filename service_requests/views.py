@@ -3,7 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import ServiceRequest, Document
 from .forms import ServiceRequestForm, DocumentForm
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
 def create_service_request(request):
@@ -85,5 +90,74 @@ def quote_response(request, request_number):
             messages.success(request, f'Quote has been {response}.')
         else:
             messages.error(request, 'Invalid response.')
+    
+    return redirect('service_request_detail', request_number=request_number)
+
+@login_required
+def create_payment_intent(request, request_number):
+    service_request = get_object_or_404(
+        ServiceRequest, 
+        request_number=request_number,
+        user=request.user,
+        quote_status='accepted',
+        is_paid=False
+    )
+    
+    try:
+        intent = stripe.PaymentIntent.create(
+            amount=int(service_request.quote_amount * 100),  # Convert to cents
+            currency=settings.STRIPE_CURRENCY,
+            metadata={
+                'request_number': str(service_request.request_number)
+            }
+        )
+        
+        service_request.stripe_payment_intent_id = intent.id
+        service_request.save()
+        
+        return JsonResponse({
+            'clientSecret': intent.client_secret,
+            'amount': int(service_request.quote_amount * 100)
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=403)
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+        
+        if event['type'] == 'payment_intent.succeeded':
+            payment_intent = event['data']['object']
+            request_number = payment_intent['metadata']['request_number']
+            
+            service_request = ServiceRequest.objects.get(
+                request_number=request_number,
+                stripe_payment_intent_id=payment_intent.id
+            )
+            service_request.is_paid = True
+            service_request.save()
+            
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@login_required
+def payment_success(request, request_number):
+    service_request = get_object_or_404(
+        ServiceRequest,
+        request_number=request_number,
+        user=request.user
+    )
+    
+    if service_request.is_paid:
+        messages.success(request, "Payment processed successfully! Your service request is now in progress.")
+    else:
+        messages.info(request, "Payment is being processed. Please wait for confirmation.")
     
     return redirect('service_request_detail', request_number=request_number)
