@@ -1,70 +1,94 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+<div class="container mt-4">
     <h1>Service Request Details</h1>
-    <p>Request Number: {{ service_request.request_number }}</p>
-    <p>Business Type: {{ service_request.business_type }}</p>
-    <p>Monthly Revenue: {{ service_request.monthly_revenue }}</p>
-    <p>Monthly Transactions: {{ service_request.monthly_transactions }}</p>
-    <p>Monthly Operating Costs: {{ service_request.monthly_operating_costs }}</p>
-    <p>Status: {{ service_request.status }}</p>
-    <p>Created On: {{ service_request.created_on }}</p>
-
-    <h1>Quote Details</h1>
-    <p>Quote Amount: {{ service_request.quote_amount }}</p>
-    <p>Quote Accepted: {{ service_request.quote_accepted }}</p>
-
-    {% if service_request.quote_amount and service_request.quote_status == 'pending' %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Quote Response Required</h5>
-            <p>A quote of ${{ service_request.quote_amount }} has been provided for your service request.</p>
-            <form method="POST" action="{% url 'quote_response' service_request.request_number %}">
-                {% csrf_token %}
-                <button type="submit" name="response" value="accepted" class="btn btn-success me-2">Accept Quote</button>
-                <button type="submit" name="response" value="rejected" class="btn btn-danger">Reject Quote</button>
-            </form>
-        </div>
-    </div>
-    {% elif service_request.quote_amount %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Quote Status</h5>
-            <p>Quote Amount: ${{ service_request.quote_amount }}</p>
-            <p>Status: {{ service_request.get_quote_status_display }}</p>
-        </div>
-    </div>
-    {% endif %}
     
-    <!-- Customer Document Section -->
-    <h2>Your Document</h2>
-    {% with document=service_request.documents.first %}
-        {% if document.document_type == 'customer' %}
-            <p>
-                {{ document.file.name }} 
-                ({% if document.is_bank_statement %}Bank Statement{% else %}Other Document{% endif %})
-                - Uploaded on {{ document.uploaded_at }}
-            </p>
-        {% else %}
-            <p>No document uploaded yet.</p>
-        {% endif %}
-    {% endwith %}
-
-    <!-- Owner Document Section -->
-    <h2>FFS Documents</h2>
-    {% for document in documents %}
-        {% if document.document_type == 'owner' %}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Document from FFS</h5>
-                    <p class="card-text">Uploaded on {{ document.uploaded_at|date:"M d, Y" }}</p>
-                    <a href="{{ document.file.url }}" class="btn btn-primary" target="_blank">Download Document</a>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Request #{{ service_request.request_number }}</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Business Type:</strong> {{ service_request.business_type }}</p>
+                    <p><strong>Monthly Revenue:</strong> ${{ service_request.monthly_revenue }}</p>
+                    <p><strong>Monthly Transactions:</strong> {{ service_request.monthly_transactions }}</p>
+                    <p><strong>Monthly Operating Costs:</strong> ${{ service_request.monthly_operating_costs }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge {% if service_request.status == 'pending' %}bg-warning{% elif service_request.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
+                            {{ service_request.status|title }}
+                        </span>
+                    </p>
+                    <p><strong>Created On:</strong> {{ service_request.created_on|date:"M d, Y" }}</p>
+                </div>
+                
+                <div class="col-md-6">
+                    {% if service_request.quote_amount and service_request.quote_status == 'pending' %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Quote Response Required</h5>
+                                <p>A quote of ${{ service_request.quote_amount }} has been provided for your service request.</p>
+                                <form method="POST" action="{% url 'quote_response' service_request.request_number %}">
+                                    {% csrf_token %}
+                                    <button type="submit" name="response" value="accepted" class="btn btn-success me-2">Accept Quote</button>
+                                    <button type="submit" name="response" value="rejected" class="btn btn-danger">Reject Quote</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% elif service_request.quote_amount %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Quote Status</h5>
+                                <p><strong>Quote Amount:</strong> ${{ service_request.quote_amount }}</p>
+                                <p><strong>Status:</strong> {{ service_request.get_quote_status_display }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-        {% endif %}
-    {% empty %}
-        <p>No documents available yet.</p>
-    {% endfor %}
-    
-    <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Documents</h5>
+            
+            <!-- Customer Documents -->
+            <div class="mb-4">
+                <h6>Your Documents</h6>
+                {% for document in documents %}
+                    {% if document.document_type == 'customer' %}
+                        <div class="mb-3">
+                            <p><strong>File:</strong> {{ document.file.name }}</p>
+                            <p><strong>Type:</strong> {% if document.is_bank_statement %}Bank Statement{% else %}Other Document{% endif %}</p>
+                            <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
+                            <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Owner Documents -->
+            <div class="mb-4">
+                <h6>FFS Documents</h6>
+                {% for document in documents %}
+                    {% if document.document_type == 'owner' %}
+                        <div class="mb-3">
+                            <p><strong>File:</strong> {{ document.file.name }}</p>
+                            <p><strong>Uploaded:</strong> {{ document.uploaded_at|date:"M d, Y" }}</p>
+                            <a href="{{ document.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p>No FFS documents available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
+        <a href="{% url 'service_request_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
 {% endblock %}
