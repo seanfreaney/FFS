@@ -9,9 +9,6 @@
     <script src="https://js.stripe.com/v3/"></script>
     
     <script>
-        // Debug logging
-        console.log('DEBUG - Stripe Public Key:', '{{ stripe_public_key }}');
-
         const createPaymentIntentUrl = "{% url 'create_payment_intent' service_request.request_number %}";
         const csrfToken = "{{ csrf_token }}";
         const stripePublicKey = "{{ stripe_public_key }}";
@@ -110,7 +107,11 @@
         <a href="{% url 'service_request_list' %}" class="btn btn-secondary">Back to List</a>
     </div>
 
-    {% if service_request.quote_status == 'accepted' and not service_request.is_paid %}
+    {% if service_request.is_paid %}
+        <div class="alert alert-success">
+            Payment confirmed! Your service request is now in progress.
+        </div>
+    {% elif service_request.quote_status == 'accepted' and not service_request.is_paid %}
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Payment Required</h5>

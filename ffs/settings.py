@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-g5uzdyg#o06kyyrx0p^$6n=mil6!s4qo1c11owa40vn#@%$ckw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1']
+ALLOWED_HOSTS = ['8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -185,8 +185,5 @@ STRIPE_CURRENCY = os.environ.get('STRIPE_CURRENCY', 'eur')
 
 stripe.api_key = STRIPE_SECRET_KEY
 
-# Debug prints
-print("\nSTRIPE CONFIGURATION:")
-print(f"Public Key loaded: {STRIPE_PUBLIC_KEY[:10]}..." if STRIPE_PUBLIC_KEY else "No public key!")
-print(f"Secret Key loaded: {STRIPE_SECRET_KEY[:10]}..." if STRIPE_SECRET_KEY else "No secret key!")
-print(f"Stripe API Key set: {stripe.api_key[:10]}..." if stripe.api_key else "No API key!")
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
+print(f"Webhook secret loaded: {bool(STRIPE_WEBHOOK_SECRET)}")

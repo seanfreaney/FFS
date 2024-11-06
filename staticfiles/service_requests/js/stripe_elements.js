@@ -1,8 +1,3 @@
-// Add debug logs
-console.log('Stripe Public Key:', stripePublicKey);
-console.log('CSRF Token:', csrfToken);
-console.log('Payment Intent URL:', createPaymentIntentUrl);
-
 // Initialize Stripe
 const stripe = Stripe(stripePublicKey);
 
@@ -56,12 +51,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (error) {
                     console.error('Payment error:', error);
-                    document.getElementById('card-errors').textContent = error.message;
+                    const errorDiv = document.getElementById('card-errors');
+                    errorDiv.textContent = error.message;
+                    errorDiv.classList.add('alert', 'alert-danger');
                     paymentButton.disabled = false;
                 } else {
                     if (paymentIntent.status === 'succeeded') {
-                        // Payment successful - redirect to success page
+                        // Show processing message
+                        const messageDiv = document.getElementById('card-errors');
+                        messageDiv.textContent = 'Payment received! Processing your request...';
+                        messageDiv.classList.remove('alert-danger');
+                        messageDiv.classList.add('alert', 'alert-info');
+                        
+                        // Redirect to success page and force refresh
                         window.location.href = `/service-requests/${data.requestNumber}/payment-success/`;
+                        
+                        // Add a small delay and refresh
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        console.error('Unexpected payment status:', paymentIntent.status);
+                        const messageDiv = document.getElementById('card-errors');
+                        messageDiv.textContent = 'Something went wrong. Please try again or contact support.';
+                        messageDiv.classList.add('alert', 'alert-danger');
+                        paymentButton.disabled = false;
                     }
                 }
                 

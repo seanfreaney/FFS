@@ -35,6 +35,12 @@ class ServiceRequest(models.Model):
     stripe_payment_intent_id = models.CharField(max_length=255, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
 
+    def mark_as_paid(self):
+        """Helper method to mark request as paid"""
+        self.is_paid = True
+        self.status = 'in_progress'
+        self.save()
+
 class Document(models.Model):
     DOCUMENT_TYPE_CHOICES = [
         ('customer', 'Customer Document'),
