@@ -36,9 +36,18 @@ def create_service_request(request):
 
 @login_required
 def service_request_detail(request, request_number):
+    print("Stripe Public Key:", settings.STRIPE_PUBLIC_KEY)
+    print("Stripe Secret Key exists:", bool(settings.STRIPE_SECRET_KEY))
+    
     service_request = get_object_or_404(ServiceRequest, request_number=request_number, user=request.user)
     documents = service_request.documents.all()
-    return render(request, 'service_requests/service_request_detail.html', {'service_request': service_request, 'documents': documents})
+    
+    context = {
+        'service_request': service_request,
+        'documents': documents,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+    }
+    return render(request, 'service_requests/service_request_detail.html', context)
 
 @login_required
 def service_request_list(request):
@@ -95,6 +104,8 @@ def quote_response(request, request_number):
 
 @login_required
 def create_payment_intent(request, request_number):
+    print("Creating payment intent with secret key:", bool(stripe.api_key)) #added debug print
+    
     service_request = get_object_or_404(
         ServiceRequest, 
         request_number=request_number,
@@ -117,6 +128,7 @@ def create_payment_intent(request, request_number):
         
         return JsonResponse({
             'clientSecret': intent.client_secret,
+            'requestNumber': service_request.request_number,
             'amount': int(service_request.quote_amount * 100)
         })
     except Exception as e:

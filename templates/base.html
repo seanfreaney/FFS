@@ -26,6 +26,12 @@
     {% endblock %}
 
     {% block extra_js %}
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            const stripePublicKey = '{{ stripe_public_key }}';
+            const csrfToken = '{{ csrf_token }}';
+        </script>
+        {% block page_js %}{% endblock %}
     {% endblock %}
 
     <title>FFS {% block extra_title %}{% endblock %}</title>
