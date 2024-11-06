@@ -9,6 +9,9 @@
     <script src="https://js.stripe.com/v3/"></script>
     
     <script>
+        // Debug logging
+        console.log('DEBUG - Stripe Public Key:', '{{ stripe_public_key }}');
+
         const createPaymentIntentUrl = "{% url 'create_payment_intent' service_request.request_number %}";
         const csrfToken = "{{ csrf_token }}";
         const stripePublicKey = "{{ stripe_public_key }}";

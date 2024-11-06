@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import stripe
+from pathlib import Path
+
+try:
+    import env
+    print("env.py found and imported!")
+except ImportError:
+    print("env.py not found!")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -174,3 +182,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_CURRENCY = os.environ.get('STRIPE_CURRENCY', 'eur')
+
+stripe.api_key = STRIPE_SECRET_KEY
+
+# Debug prints
+print("\nSTRIPE CONFIGURATION:")
+print(f"Public Key loaded: {STRIPE_PUBLIC_KEY[:10]}..." if STRIPE_PUBLIC_KEY else "No public key!")
+print(f"Secret Key loaded: {STRIPE_SECRET_KEY[:10]}..." if STRIPE_SECRET_KEY else "No secret key!")
+print(f"Stripe API Key set: {stripe.api_key[:10]}..." if stripe.api_key else "No API key!")
