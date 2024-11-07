@@ -18,9 +18,18 @@ def management_dashboard(request):
 
 @staff_member_required
 def service_request_management(request):
-    service_requests = ServiceRequest.objects.all().order_by('-created_on')
+    date_order = request.GET.get('date_order', '')
+    
+    service_requests = ServiceRequest.objects.all()
+    
+    if date_order == 'oldest':
+        service_requests = service_requests.order_by('created_on')
+    elif date_order == 'newest':
+        service_requests = service_requests.order_by('-created_on')
+    
     context = {
         'service_requests': service_requests,
+        'date_order': date_order,
     }
     return render(request, 'management/service_request_management.html', context)
 

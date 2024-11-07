@@ -5,41 +5,53 @@
 <div class="container mt-4">
     <h1>Service Request Management</h1>
     
-    <div class="table-responsive mt-4">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Request #</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for request in service_requests %}
-                <tr>
-                    <td>{{ request.request_number }}</td>
-                    <td>{{ request.user.get_full_name|default:request.user.email }}</td>
-                    <td>
-                        <span class="badge {% if request.status == 'pending' %}bg-warning{% elif request.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
-                            {{ request.status|title }}
-                        </span>
-                    </td>
-                    <td>{{ request.created_on|date:"M d, Y" }}</td>
-                    <td>
-                        <div class="btn-group">
-                            <a href="{% url 'management:service_request_detail' request.request_number %}" class="btn btn-sm btn-primary">View Request</a>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center">No service requests found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <form method="get">
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" id="dateFilter" onchange="this.form.submit()" name="date_order">
+                    <option value="">Sort by Date</option>
+                    <option value="oldest" {% if date_order == 'oldest' %}selected{% endif %}>Oldest First</option>
+                    <option value="newest" {% if date_order == 'newest' %}selected{% endif %}>Newest First</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-responsive mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Request #</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in service_requests %}
+                    <tr>
+                        <td>{{ request.request_number }}</td>
+                        <td>{{ request.user.get_full_name|default:request.user.email }}</td>
+                        <td>
+                            <span class="badge {% if request.status == 'pending' %}bg-warning{% elif request.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
+                                {{ request.status|title }}
+                            </span>
+                        </td>
+                        <td>{{ request.created_on|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'management:service_request_detail' request.request_number %}" class="btn btn-sm btn-primary">View Request</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No service requests found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
 </div>
 {% endblock %}
