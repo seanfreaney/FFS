@@ -1,19 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Your Service Requests</h1>
-    {% if service_requests %}
-        <ul>
-            {% for request in service_requests %}
-                <li>
-                    <a href="{% url 'service_request_detail' request_number=request.request_number %}">
-                        {{ request.business_type }} - {{ request.status }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>You have no service requests.</p>
-    {% endif %}
-    <a href="{% url 'create_service_request' %}" class="btn btn-primary">Create New Service Request</a>
+<div class="container page-container">
+    <h1 class="page-title">Your Service Requests</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if service_requests %}
+                <div class="list-group">
+                    {% for request in service_requests %}
+                        <a href="{% url 'service_request_detail' request_number=request.request_number %}" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">{{ request.business_type }}</h6>
+                                <small class="text-muted">Created on {{ request.created_on|date:"M d, Y" }}</small>
+                            </div>
+                            <span class="badge {% if request.status == 'pending' %}bg-warning{% elif request.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
+                                {{ request.status|title }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">You have no service requests.</p>
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{% url 'create_service_request' %}" class="btn btn-primary">Create New Service Request</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

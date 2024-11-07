@@ -2,13 +2,23 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1>Create Service Request</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <h2>Upload Document</h2>
-        {{ document_form|crispy }}
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="container page-container">
+    <h1 class="page-title">Create Service Request</h1>
+    
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="section-title">Service Request Details</div>
+            {{ form|crispy }}
+            
+            <div class="section-title">Upload Document</div>
+            {{ document_form|crispy }}
+            
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
