@@ -1,9 +1,28 @@
-/* Bootstarp header styling */
-
-body {
-  background-color: #4682B4;
+/* Color Variables */
+:root {
+  --primary-color: #4682B4;  /* Steel Blue - keeping your existing color */
+  --secondary-color: #2C5282;
+  --accent-color: #63B3ED;
+  --text-color: #2D3748;
+  --light-text: #718096;
+  --background-color: #F7FAFC;
+  --white: #FFFFFF;
+  --success: #48BB78;
+  --warning: #F6AD55;
+  --danger: #F56565;
+  --border-color: #E2E8F0;
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Global Styles */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+}
+
+/* Bootstrap header styling - keeping your existing styles */
 .form-control-dark {
   border-color: var(--bs-gray);
 }
@@ -22,25 +41,24 @@ body {
 }
 
 .overlay {
-	height: 100%;
-	width: 100%;
-	top: 0;
-	left: 0;
-	position: fixed;
-	background: white;
-	z-index: -1;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  background: white;
+  z-index: -1;
 }
 
-/* Allauth form formatting  - Taken from Boutique Ado */
-
+/* Allauth form formatting - keeping your existing styles */
 .allauth-form-inner-content p {
-  margin-top: 1.5rem; /* mt-4 */
-  color: #6c757d; /* text-secondary */
+  margin-top: 1.5rem;
+  color: var(--light-text);
 }
 
 .allauth-form-inner-content input {
-  border-color: #000;
-  border-radius: 0;
+  border-color: var(--border-color);
+  border-radius: 6px;
 }
 
 .allauth-form-inner-content label:not([for='id_remember']) {
@@ -48,58 +66,93 @@ body {
 }
 
 .allauth-form-inner-content input::placeholder {
-  color: #aab7c4;
+  color: var(--light-text);
 }
 
-.allauth-form-inner-content button,
-.allauth-form-inner-content input[type='submit'] {
-/* btn */
-display: inline-block;
-  font-weight: 400;
-  color: #fff;
-  text-align: center;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-color: #000;
-  border: 1px solid #000;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0;
-
-  /* standard bootstrap btn transitions */
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+/* New Components */
+/* Header */
+header {
+  background-color: var(--primary-color);
+  box-shadow: var(--shadow);
 }
 
-.allauth-form-inner-content button:hover,
-.allauth-form-inner-content input[type='submit']:hover {	
-color: #fff;
-  background-color: #222;
-  border-color: #222;
+/* Cards */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
 }
 
-.allauth-form-inner-content a {
-color: #17a2b8; /* text-info */
+.card-header {
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem;
 }
 
-/* Stripe Payment Styles */
-#payment-form {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+/* Buttons */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s;
 }
 
-#payment-element {
-    margin-bottom: 24px;
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
-.payment-message {
-    color: rgb(105, 115, 134);
-    font-size: 16px;
-    line-height: 20px;
-    padding-top: 12px;
-    text-align: center;
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Status Badges */
+.badge {
+  padding: 0.5em 1em;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.bg-warning {
+  background-color: var(--warning) !important;
+  color: var(--text-color);
+}
+
+.bg-success {
+  background-color: var(--success) !important;
+  color: var(--white);
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+  color: var(--white);
+}
+
+/* Tables */
+.table {
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table thead th {
+  background-color: var(--background-color);
+  border-bottom: 2px solid var(--border-color);
+  color: var(--light-text);
+  font-weight: 600;
+}
+
+/* Forms */
+.form-control {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
 }
