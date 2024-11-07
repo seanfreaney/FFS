@@ -1,9 +1,64 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_header %}
-{% endblock %}
-
 {% block content %}
+<div class="container page-container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-4">Freaney Financial Services</h1>
+            <p class="lead mb-4">Family-owned financial expertise for small and medium enterprises</p>
+        </div>
+    </div>
 
+    <!-- Main Content -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">About Us</h2>
+                    <p class="card-text">
+                        Welcome to Freaney Financial Services (FFS), a family-owned financial services provider dedicated to supporting small and medium-sized enterprises. We specialize in preparing monthly management accounts, helping businesses make informed decisions with accurate financial data.
+                    </p>
+                    <p class="card-text">
+                        Our commitment to excellence is built on three core principles:
+                    </p>
+                    <div class="row mt-4">
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-star fa-2x mb-3 text-primary"></i>
+                            <h5>Quality Service</h5>
+                            <p class="small">High-quality financial reporting you can trust</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-clock fa-2x mb-3 text-primary"></i>
+                            <h5>Quick Turnaround</h5>
+                            <p class="small">Efficient service delivery when you need it</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-hand-holding-usd fa-2x mb-3 text-primary"></i>
+                            <h5>Fair Pricing</h5>
+                            <p class="small">Competitive rates for professional service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12 text-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_service_request' %}" class="btn btn-primary btn-lg">Request Our Services</a>
+            {% else %}
+                <div class="mb-4">
+                    <h3>Ready to get started?</h3>
+                    <p>Create an account to request our services</p>
+                </div>
+                <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg me-3">Register Now</a>
+                <a href="{% url 'account_login' %}" class="btn btn-outline-primary btn-lg">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

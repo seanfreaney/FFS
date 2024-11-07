@@ -209,3 +209,26 @@ header .btn-outline-light:hover {
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
+
+/* Homepage Styles */
+.page-container {
+    padding: 4rem 0;
+}
+
+.display-4 {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.lead {
+    color: var(--text-color);
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+}
+
+.fas {
+    color: var(--primary-color);
+}
