@@ -8,11 +8,24 @@
     <form method="get">
         <div class="row mb-3">
             <div class="col-md-3">
-                <select class="form-select" id="dateFilter" onchange="this.form.submit()" name="date_order">
-                    <option value="">Sort by Date</option>
+                <label for="dateFilter" class="form-label">Sort by Date</label>
+                <select class="form-select" id="dateFilter" name="date_order">
+                    <option value="">All Dates</option>
                     <option value="oldest" {% if date_order == 'oldest' %}selected{% endif %}>Oldest First</option>
                     <option value="newest" {% if date_order == 'newest' %}selected{% endif %}>Newest First</option>
                 </select>
+            </div>
+            <div class="col-md-3">
+                <label for="statusFilter" class="form-label">Filter by Status</label>
+                <select class="form-select" id="statusFilter" name="status">
+                    <option value="">All Status</option>
+                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="in_progress" {% if status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                    <option value="completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            <div class="col-md-3 align-self-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
             </div>
         </div>
         
