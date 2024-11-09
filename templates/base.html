@@ -3,7 +3,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-
     {% block meta %}
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta charset="utf-8">
@@ -38,63 +37,65 @@
 
     <title>FFS {% block extra_title %}{% endblock %}</title>
   </head>
-  <body>
-    <!-- Bootstrap template -->
-    <header class="p-3 text-bg-dark"> 
-      <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
-          </a>
+  <body class="d-flex flex-column min-vh-100">
+    <div class="flex-grow-1">
+      <!-- Bootstrap template -->
+      <header class="fixed-top p-3 text-bg-dark"> 
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+            </a>
 
-          <div class="text-end">
-            <a href="{% url 'home' %}" class="btn btn-outline-light me-2">Home</a>
-            {% if request.user.is_authenticated %}
-                {% if request.user.is_superuser %}
-                  <a href="{% url 'management:management_dashboard' %}" class="btn btn-outline-light me-2">Management</a> <!-- UPDATE for Management/Admin -->
+            <div class="text-end">
+              <span class="text-light me-3">
+                {% if request.user.is_authenticated %}
+                  Logged in as: {{ request.user.email }}
                 {% endif %}
-                <a href="{% url 'profile' %}" class="btn btn-outline-light me-2">My Profile</a>
-                <a href="{% url 'create_service_request' %}" class="btn btn-outline-light me-2">New Service Request</a>
-                <a href="{% url 'service_request_list' %}" class="btn btn-outline-light me-2">My Service Requests</a>
-                <a href="{% url 'account_logout' %}" class="btn btn-outline-light me-2">Logout</a>
-            {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light me-2">Register</a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Login</a>
-            {% endif %}
-            <span class="text-light me-3">
+              </span>
+              <a href="{% url 'home' %}" class="btn btn-outline-light me-2">Home</a>
               {% if request.user.is_authenticated %}
-                Logged in as: {{ request.user.email }}
+                  {% if request.user.is_superuser %}
+                    <a href="{% url 'management:management_dashboard' %}" class="btn btn-outline-light me-2">Management</a>
+                  {% endif %}
+                  <a href="{% url 'profile' %}" class="btn btn-outline-light me-2">My Profile</a>
+                  <a href="{% url 'create_service_request' %}" class="btn btn-outline-light me-2">New Service Request</a>
+                  <a href="{% url 'service_request_list' %}" class="btn btn-outline-light me-2">My Service Requests</a>
+                  <a href="{% url 'account_logout' %}" class="btn btn-outline-light me-2">Logout</a>
+              {% else %}
+                  <a href="{% url 'account_signup' %}" class="btn btn-outline-light me-2">Register</a>
+                  <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Login</a>
               {% endif %}
+            </div>
+          </div>
         </div>
-        
-        </div>
-      </div>
-    </header>
+      </header>
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+      {% if messages %}
+          <div class="messages">
+              {% for message in messages %}
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                      {{ message }}
+                  </div>
+              {% endfor %}
+          </div>
+      {% endif %}
 
-    {% block page_header %}
-    {% endblock %}
+      {% block page_header %}
+      {% endblock %}
 
-    {% block content %}
-    {% endblock %}
+      {% block content %}
+      {% endblock %}
+    </div>
 
     {% block postloadjs %}
     {% endblock %}
 
-    <footer class="footer mt-auto py-3 bg-dark text-light">
+    <footer class="footer fixed-bottom bg-dark text-light">
       <div class="container">
-          <div class="row">
+          <div class="row py-3">
               <div class="col-md-6 text-center text-md-start">
-                  <p>&copy; 2024 FFS. All rights reserved.</p>
+                  <p class="mb-0">&copy; 2024 FFS. All rights reserved.</p>
               </div>
               <div class="col-md-6 text-center text-md-end">
                   <a href="https://facebook.com" target="_blank" class="text-light me-3" aria-label="Visit our Facebook page">
@@ -112,8 +113,6 @@
               </div>
           </div>
       </div>
-  </footer>
-
-    
+    </footer>
   </body>
 </html>
