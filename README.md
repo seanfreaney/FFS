@@ -11,3 +11,19 @@ My Goal was to create a website that would allow me to provide a range of servic
 It was my intention to keep the design as simple as possible. Initially, 
 
 - FFS Wireframes
+
+
+## Features
+
+
+
+### Home
+
+### Management
+
+### Profiles
+
+### Service_Requests
+
+
+## Business Model / Marketing Strategy
