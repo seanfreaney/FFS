@@ -4,9 +4,28 @@
 <html lang="en">
   <head>
     {% block meta %}
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Primary Meta Tags -->
+    <meta name="title" content="FFS - Freaney Financial Services {% block meta_title %}{% endblock %}">
+    <meta name="description" content="Freaney Financial Services provides expert management accounting services to SMEs in Ireland. Professional financial guidance, accounting solutions, and business advisory services. {% block meta_description %}{% endblock %}">
+    <meta name="keywords" content="management accounting, financial services ireland, SME accounting, business advisory, financial planning, accountant dublin, business financial services {% block meta_keywords %}{% endblock %}">
+    <meta name="author" content="Freaney Financial Services">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="FFS - Freaney Financial Services {% block og_title %}{% endblock %}">
+    <meta property="og:description" content="Expert management accounting and financial advisory services for small and medium enterprises in Ireland. Professional financial guidance tailored to your business needs. {% block og_description %}{% endblock %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="FFS - Freaney Financial Services {% block twitter_title %}{% endblock %}">
+    <meta property="twitter:description" content="Expert management accounting and financial advisory services for SMEs in Ireland. Professional financial guidance tailored to your business needs. {% block twitter_description %}{% endblock %}">
     {% endblock %}
 
     {% block extra_meta %}
