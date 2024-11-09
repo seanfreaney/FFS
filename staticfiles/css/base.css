@@ -71,14 +71,12 @@ body {
   color: var(--light-text);
 }
 
-/* New Components */
 /* Header */
 header {
   background-color: var(--primary-color);
   box-shadow: var(--shadow);
 }
 
-/* Update header text color for better contrast */
 header .btn-outline-light {
   color: var(--text-color);
   border-color: var(--text-color);
@@ -88,6 +86,15 @@ header .btn-outline-light:hover {
   background-color: var(--secondary-color);
   color: var(--white);
   border-color: var(--secondary-color);
+}
+
+.navbar-toggler {
+  border: 1px solid rgba(255,255,255,.5);
+  padding: .25rem .75rem;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 /* Cards */
@@ -211,7 +218,7 @@ header .btn-outline-light:hover {
 }
 
 .main-content {
-  min-height: calc(100vh - 160px); /* Adjust for header + footer height */
+  min-height: calc(100vh - 160px); 
 }
 
 /* Homepage Styles */
@@ -235,4 +242,22 @@ header .btn-outline-light:hover {
 
 .fas {
     color: var(--primary-color);
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #212529;
+      padding: 1rem;
+      z-index: 1000;
+  }
+  
+  .navbar-collapse .btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+  }
 }
