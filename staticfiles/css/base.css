@@ -78,8 +78,8 @@ header {
 }
 
 header .btn-outline-light {
-  color: var(--text-color);
-  border-color: var(--text-color);
+  color: var(--white);  
+  border-color: var(--white);
 }
 
 header .btn-outline-light:hover {
@@ -325,18 +325,15 @@ header .btn-outline-light:hover {
 
 /* General spacing adjustments */
 @media (max-width: 767.98px) {
-  /* Add more space above content to account for fixed header */
   body {
       padding-top: 70px;
   }
 
-  /* Adjust margins and padding for main content */
   .content-section {
       padding: 1rem;
       margin-bottom: 1rem;
   }
 
-  /* Adjust spacing for messages */
   .messages {
       margin-top: 1rem;
   }
@@ -345,7 +342,7 @@ header .btn-outline-light:hover {
 /* Fix for footer on mobile */
 @media (max-width: 767.98px) {
   body {
-      margin-bottom: 120px; /* Adjust based on your footer height */
+      margin-bottom: 120px; 
   }
   
   .footer {
@@ -357,10 +354,9 @@ header .btn-outline-light:hover {
   }
 }
 
-/* Ensure content doesn't get hidden under fixed header */
 body {
-  padding-top: 76px; /* Adjust this value based on your header height */
-  padding-bottom: 76px; /* Adjust this value based on your footer height */
+  padding-top: 76px; 
+  padding-bottom: 76px; 
 }
 
 /* Handle very small screens */
