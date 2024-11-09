@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_title %}- Request #{{ service_request.request_number }} Management{% endblock %}
+
+{% block meta_title %}- Manage Service Request Details{% endblock %}
+
+{% block meta_description %}Administrative management interface for service request details. Update status, provide quotes, manage documents, and track client information for Freaney Financial Services requests.{% endblock %}
+
+{% block meta_keywords %}, request management, service administration, document management, quote management, status updates{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <h1>Service Request Details</h1>
