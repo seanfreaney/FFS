@@ -110,14 +110,12 @@
         </div>
     </div>
 
-    <div class="mt-3">
-        <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
-        <a href="{% url 'service_request_list' %}" class="btn btn-secondary">Back to List</a>
-    </div>
-
     {% if service_request.is_paid %}
-        <div class="alert alert-success">
-            Payment confirmed! Your service request is now in progress.
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Payment Status</h5>
+                <p class="card-text">Payment confirmed! A member of the FFS team will be in touch shortly to discuss your request. Please ensure your contact details are up to date in the <a href="{% url 'profile' %}">My Profile</a> section.</p>
+            </div>
         </div>
     {% elif service_request.quote_status == 'accepted' and not service_request.is_paid %}
         <div class="card mb-4">
@@ -127,11 +125,7 @@
                 
                 <form id="payment-form">
                     <div class="form-group">
-                        <div id="card-element" class="form-control">
-                            <!-- A Stripe Element will be inserted here. -->
-                        </div>
-                        
-                        <!-- Used to display form errors. -->
+                        <div id="card-element" class="form-control"></div>
                         <div id="card-errors" role="alert" class="text-danger mt-2"></div>
                     </div>
                     
@@ -142,5 +136,11 @@
             </div>
         </div>
     {% endif %}
+
+    <div class="mt-3">
+        <a href="{% url 'edit_service_request' request_number=service_request.request_number %}" class="btn btn-primary">Edit Request and Document</a>
+        <a href="{% url 'service_request_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+
 </div>
 {% endblock %}
