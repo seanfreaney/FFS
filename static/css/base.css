@@ -244,6 +244,67 @@ header .btn-outline-light:hover {
     color: var(--primary-color);
 }
 
+/* Media Queries */
+
+@media (max-width: 575.98px) {
+  /* Adjust font sizes */
+  h1 {
+      font-size: 1.8rem;
+  }
+  h2 {
+      font-size: 1.5rem;
+  }
+  h3 {
+      font-size: 1.2rem;
+  }
+  
+  /* Adjust container padding */
+  .container {
+      padding-left: 15px;
+      padding-right: 15px;
+  }
+
+  /* Adjust spacing for header content */
+  header {
+      padding: 0.5rem !important;
+  }
+
+  /* Adjust buttons in header */
+  .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+  }
+
+  /* Adjust footer */
+  .footer {
+      padding: 1rem 0;
+      font-size: 0.875rem;
+  }
+}
+
+/* Small devices (tablets, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  h1 {
+      font-size: 2rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  /* Adjust container width */
+  .container {
+      max-width: 720px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .container {
+      max-width: 960px;
+  }
+}
+
+/* Navbar specific styles */
 @media (max-width: 991.98px) {
   .navbar-collapse {
       position: absolute;
@@ -254,10 +315,83 @@ header .btn-outline-light:hover {
       padding: 1rem;
       z-index: 1000;
   }
-  
+
   .navbar-collapse .btn {
       display: block;
       width: 100%;
       margin-bottom: 0.5rem;
+  }
+}
+
+/* General spacing adjustments */
+@media (max-width: 767.98px) {
+  /* Add more space above content to account for fixed header */
+  body {
+      padding-top: 70px;
+  }
+
+  /* Adjust margins and padding for main content */
+  .content-section {
+      padding: 1rem;
+      margin-bottom: 1rem;
+  }
+
+  /* Adjust spacing for messages */
+  .messages {
+      margin-top: 1rem;
+  }
+}
+
+/* Fix for footer on mobile */
+@media (max-width: 767.98px) {
+  body {
+      margin-bottom: 120px; /* Adjust based on your footer height */
+  }
+  
+  .footer {
+      padding: 0.5rem 0;
+  }
+
+  .footer .social-icons {
+      margin-top: 0.5rem;
+  }
+}
+
+/* Ensure content doesn't get hidden under fixed header */
+body {
+  padding-top: 76px; /* Adjust this value based on your header height */
+  padding-bottom: 76px; /* Adjust this value based on your footer height */
+}
+
+/* Handle very small screens */
+@media (max-width: 320px) {
+  .btn {
+      padding: 0.2rem 0.4rem;
+      font-size: 0.8rem;
+  }
+
+  h1 {
+      font-size: 1.5rem;
+  }
+}
+
+/* Utility classes for responsive text */
+.text-responsive {
+  font-size: calc(0.8rem + 0.5vw);
+}
+
+/* Responsive images */
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive tables */
+@media (max-width: 767.98px) {
+  .table-responsive-sm {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
   }
 }
