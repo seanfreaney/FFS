@@ -60,6 +60,10 @@
                 <a href="{% url 'account_signup' %}" class="btn btn-outline-light me-2">Register</a>
                 <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Login</a>
             {% endif %}
+            <span class="text-light me-3">
+              {% if request.user.is_authenticated %}
+                Logged in as: {{ request.user.email }}
+              {% endif %}
         </div>
         
         </div>
