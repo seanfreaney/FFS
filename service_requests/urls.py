@@ -18,5 +18,8 @@ urlpatterns = [
     path('request/<uuid:request_number>/check-payment-status/', 
          views.check_payment_status, 
          name='check_payment_status'),
+    path('request/<uuid:request_number>/delete/', 
+         views.delete_service_request, 
+         name='delete_service_request'),
 ]
 

@@ -163,3 +163,16 @@ def check_payment_status(request, request_number):
         'is_paid': service_request.is_paid,
         'status': service_request.status
     })
+
+@login_required
+def delete_service_request(request, request_number):
+    service_request = get_object_or_404(ServiceRequest, request_number=request_number)
+    
+    # Check if user owns the request or is staff
+    if request.user == service_request.user or request.user.is_staff:
+        service_request.delete()
+        messages.success(request, 'Service request successfully deleted.')
+        return redirect('service_request_list')
+    else:
+        messages.error(request, 'You do not have permission to delete this request.')
+        return redirect('service_request_list')
