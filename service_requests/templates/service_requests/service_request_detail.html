@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_title %}- Request #{{ service_request.request_number }} Details{% endblock %}
+
+{% block meta_title %}- Service Request Details{% endblock %}
+
+{% block meta_description %}View and manage your management accounting service request with Freaney Financial Services. Track status, view documents, and process payments securely.{% endblock %}
+
+{% block meta_keywords %}, service request tracking, management accounts status, financial service portal, document management{% endblock %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'service_requests/css/stripe.css' %}">
 {% endblock %}
