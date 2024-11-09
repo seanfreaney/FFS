@@ -2,6 +2,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% block extra_title %}- My Profile{% endblock %}
+{% block meta_title %}- Client Portal{% endblock %}
+{% block meta_description %}Client portal for Freaney Financial Services. Manage your account and view requests.{% endblock %}
+{% block meta_keywords %}, client portal, account management, financial services portal{% endblock %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'profiles/static/profiles/css/profile.css' %}">
 {% endblock %}
