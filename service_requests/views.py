@@ -169,10 +169,18 @@ def delete_service_request(request, request_number):
     service_request = get_object_or_404(ServiceRequest, request_number=request_number)
     
     # Check if user owns the request or is staff
-    if request.user == service_request.user or request.user.is_staff:
+    if request.user != service_request.user and not request.user.is_staff:
+        messages.error(request, 'You do not have permission to delete this request.')
+        return redirect('service_request_list')
+    
+    # Handle the deletion confirmation
+    if request.method == 'POST':
         service_request.delete()
         messages.success(request, 'Service request successfully deleted.')
         return redirect('service_request_list')
-    else:
-        messages.error(request, 'You do not have permission to delete this request.')
-        return redirect('service_request_list')
+        
+    # If it's a GET request, show the confirmation page
+    context = {
+        'service_request': service_request,
+    }
+    return render(request, 'service_requests/request_confirm_delete.html', context)
