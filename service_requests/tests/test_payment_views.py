@@ -156,4 +156,24 @@ class PaymentViewTests(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertIn("Payment confirmed!", str(messages[0]))
 
+    def test_check_payment_status_unauthorized(self):
+        """Test check payment status with wrong user"""
+        other_user = User.objects.create_user(username='otheruser', password='testpass123')
+        self.client.force_login(other_user)
+        
+        response = self.client.get(
+            reverse('check_payment_status', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_check_payment_status_nonexistent(self):
+        """Test check payment status with non-existent request"""
+        self.client.force_login(self.user)
+        fake_uuid = uuid.uuid4()
+        
+        response = self.client.get(
+            reverse('check_payment_status', args=[fake_uuid])
+        )
+        self.assertEqual(response.status_code, 404)
+
     
