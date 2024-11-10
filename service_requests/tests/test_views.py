@@ -90,3 +90,71 @@ class ServiceRequestViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'service_requests/service_request_list.html')
         self.assertIn(self.service_request, response.context['service_requests'])
+
+    def test_edit_service_request(self):
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'business_type': 'Updated Business',
+            'monthly_revenue': '2000.00',
+            'monthly_transactions': '200',
+            'monthly_operating_costs': '1000.00',
+            'file': SimpleUploadedFile("new_doc.pdf", b"new_content", content_type="application/pdf"),
+            'is_bank_statement': True,
+        }
+        response = self.client.post(
+            reverse('edit_service_request', kwargs={'request_number': self.service_request.request_number}),
+            data
+        )
+        self.assertEqual(response.status_code, 302)
+        self.service_request.refresh_from_db()
+        self.assertEqual(self.service_request.business_type, 'Updated Business')
+
+    def test_quote_response(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('quote_response', kwargs={'request_number': self.service_request.request_number}),
+            {'response': 'accepted'}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.service_request.refresh_from_db()
+        self.assertEqual(self.service_request.quote_status, 'accepted')
+
+    def test_delete_service_request(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('delete_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(ServiceRequest.objects.filter(request_number=self.service_request.request_number).exists())
+
+    # Negative test cases
+    def test_edit_service_request_unauthorized(self):
+        # Create another user and login
+        User.objects.create_user(username='otheruser', password='testpass123')
+        self.client.login(username='otheruser', password='testpass123')
+        
+        response = self.client.get(
+            reverse('edit_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_quote_response_invalid_status(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(
+            reverse('quote_response', kwargs={'request_number': self.service_request.request_number}),
+            {'response': 'invalid_status'}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.service_request.refresh_from_db()
+        self.assertEqual(self.service_request.quote_status, 'pending')  # Status should remain unchanged
+
+    def test_delete_service_request_unauthorized(self):
+        # Create another user and login
+        User.objects.create_user(username='otheruser', password='testpass123')
+        self.client.login(username='otheruser', password='testpass123')
+        
+        response = self.client.post(
+            reverse('delete_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect with error message
+        self.assertTrue(ServiceRequest.objects.filter(request_number=self.service_request.request_number).exists())
