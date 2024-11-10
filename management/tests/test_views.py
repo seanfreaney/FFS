@@ -335,3 +335,30 @@ class ManagementViewsTest(TestCase):
         requests = response.context['service_requests']
         self.assertEqual(requests[0], new_request)
         self.assertEqual(requests[2], old_request)
+
+    def test_success_messages(self):
+        """Test success messages are set appropriately"""
+        from django.contrib.messages import get_messages
+        from service_requests.models import ServiceRequest
+        
+        # Create test request
+        test_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+        
+        self.client.login(username='staffuser', password='testpass123')
+        
+        # Test update message
+        response = self.client.post(
+            reverse('management:service_request_detail', 
+            kwargs={'request_number': test_request.request_number}),
+            {'status': 'completed'}
+        )
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'Service request updated successfully.')
