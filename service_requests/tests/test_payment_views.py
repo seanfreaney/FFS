@@ -72,3 +72,17 @@ class PaymentViewTests(TestCase):
             reverse('create_payment_intent', args=[self.service_request.request_number])
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_payment_success_view(self):
+        """Test the payment success view"""
+        self.client.force_login(self.user)
+        response = self.client.get(
+            reverse('payment_success', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect
+        self.assertRedirects(
+            response,
+            reverse('service_request_detail', args=[self.service_request.request_number])
+        )
+
+    
