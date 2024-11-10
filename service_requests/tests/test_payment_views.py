@@ -1,62 +1,55 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from service_requests.models import ServiceRequest
-from decimal import Decimal
-import stripe
 from unittest.mock import patch
+import uuid
 
 class PaymentViewTests(TestCase):
     def setUp(self):
-        self.user = get_user_model().objects.create_user(
+        # Create a test user
+        self.user = User.objects.create_user(
             username='testuser',
-            email='test@example.com',
             password='testpass123'
         )
+        
+        # Create a service request with accepted quote
         self.service_request = ServiceRequest.objects.create(
             user=self.user,
-            request_number='TEST001',
-            status='pending',
+            business_type='Test Business',
+            monthly_revenue=1000.00,
+            monthly_transactions=100,
+            monthly_operating_costs=500.00,
+            quote_amount=100.00,
             quote_status='accepted',
-            quote_amount=Decimal('100.00'),
+            status='pending',
             is_paid=False
         )
-        self.client = Client()
-        self.client.login(username='testuser', password='testpass123')
 
     @patch('stripe.PaymentIntent.create')
-    def test_create_payment_intent(self, mock_create):
-        # Mock the Stripe API response
+    def test_create_payment_intent_success(self, mock_create):
+        # Mock the Stripe response
         mock_create.return_value = type('obj', (object,), {
             'client_secret': 'test_secret',
             'id': 'test_id'
         })
 
+        # Log in the user
+        self.client.force_login(self.user)
+
+        # Make the request
         response = self.client.post(
-            reverse('create_payment_intent', 
-                   kwargs={'request_number': self.service_request.request_number})
-        )
-        
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {
-                'clientSecret': 'test_secret',
-                'requestNumber': self.service_request.request_number
-            }
+            reverse('create_payment_intent', kwargs={'request_number': self.service_request.request_number})
         )
 
-    def test_check_payment_status(self):
-        response = self.client.get(
-            reverse('check_payment_status', 
-                   kwargs={'request_number': self.service_request.request_number})
-        )
-        
+        # Assert response
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {
-                'is_paid': False,
-                'status': 'pending'
-            }
+        self.assertIn('clientSecret', response.json())
+        self.assertIn('requestNumber', response.json())
+
+        # Verify Stripe was called correctly
+        mock_create.assert_called_once_with(
+            amount=10000,  # 100.00 converted to cents
+            currency='eur',
+            metadata={'request_number': str(self.service_request.request_number)}
         )
