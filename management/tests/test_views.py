@@ -265,3 +265,73 @@ class ManagementViewsTest(TestCase):
         self.assertEqual(response.context['pending_count'], 2)
         self.assertEqual(response.context['in_progress_count'], 1)
         self.assertEqual(response.context['completed_count'], 1)
+
+    def test_service_request_management_date_ordering(self):
+        from service_requests.models import ServiceRequest
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        # Create service requests with different dates
+        old_date = timezone.now() - timedelta(days=7)
+        mid_date = timezone.now() - timedelta(days=3)
+        new_date = timezone.now()
+        
+        # Create requests with specific dates
+        old_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Old Request',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00,
+            created_on=old_date
+        )
+        
+        mid_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Mid Request',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00,
+            created_on=mid_date
+        )
+        
+        new_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='New Request',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00,
+            created_on=new_date
+        )
+
+        self.client.login(username='staffuser', password='testpass123')
+        
+        # Test newest first (default)
+        response = self.client.get(reverse('management:service_request_management'))
+        requests = response.context['service_requests']
+        self.assertEqual(requests[0], new_request)
+        self.assertEqual(requests[2], old_request)
+        
+        # Test oldest first
+        response = self.client.get(
+            reverse('management:service_request_management'),
+            {'date_order': 'oldest'}
+        )
+        requests = response.context['service_requests']
+        self.assertEqual(requests[0], old_request)
+        self.assertEqual(requests[2], new_request)
+        
+        # Test newest first (explicit)
+        response = self.client.get(
+            reverse('management:service_request_management'),
+            {'date_order': 'newest'}
+        )
+        requests = response.context['service_requests']
+        self.assertEqual(requests[0], new_request)
+        self.assertEqual(requests[2], old_request)
