@@ -212,3 +212,21 @@ class ServiceRequestViewTests(TestCase):
         response = self.client.post(reverse('create_service_request'), data)
         self.assertEqual(response.status_code, 200)  # Returns to form
         self.assertTrue(response.context['form'].errors)  # Should have form errors
+
+    def test_edit_service_request_invalid_data(self):
+        """Test service request edit with invalid form data"""
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'business_type': '',  # Required field left empty
+            'monthly_revenue': 'invalid',
+            'monthly_transactions': -1,
+            'monthly_operating_costs': '500.00',
+            'file': SimpleUploadedFile("test.txt", b"wrong_type"),
+            'is_bank_statement': True,
+        }
+        response = self.client.post(
+            reverse('edit_service_request', kwargs={'request_number': self.service_request.request_number}),
+            data
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].errors)
