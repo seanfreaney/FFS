@@ -109,3 +109,51 @@ class ManagementViewsTest(TestCase):
         
         # Verify context data
         self.assertEqual(response.context['service_request'], test_request)
+
+    def test_upload_owner_document_view(self):
+        # Create a test service request
+        from service_requests.models import ServiceRequest
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        
+        test_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+
+        # Create a test file
+        test_file = SimpleUploadedFile(
+            "test_document.pdf",
+            b"file_content",
+            content_type="application/pdf"
+        )
+
+        # Test access denied for non-staff
+        self.client.login(username='regularuser', password='testpass123')
+        response = self.client.post(
+            reverse('management:upload_owner_document', kwargs={'request_number': test_request.request_number}),
+            {'file': test_file}
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect to login
+
+        # Test successful upload for staff
+        self.client.login(username='staffuser', password='testpass123')
+        response = self.client.post(
+            reverse('management:upload_owner_document', kwargs={'request_number': test_request.request_number}),
+            {'file': test_file}
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect to detail page
+        
+        # Verify document was created
+        self.assertTrue(test_request.documents.filter(document_type='owner').exists())
+        
+        # Test upload without file
+        response = self.client.post(
+            reverse('management:upload_owner_document', kwargs={'request_number': test_request.request_number}),
+            {}
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect to detail page
