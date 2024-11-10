@@ -158,3 +158,42 @@ class ServiceRequestViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)  # Should redirect with error message
         self.assertTrue(ServiceRequest.objects.filter(request_number=self.service_request.request_number).exists())
+
+    # Test accessing protected views without login
+    def test_views_require_login(self):
+        # Define URL patterns and their required kwargs
+        url_patterns = [
+            ('create_service_request', {}),  # Create doesn't need request_number
+            ('service_request_list', {}),
+            ('service_request_detail', {'request_number': self.service_request.request_number}),
+            ('edit_service_request', {'request_number': self.service_request.request_number}),
+            ('quote_response', {'request_number': self.service_request.request_number}),
+        ]
+        
+        for url_name, kwargs in url_patterns:
+            response = self.client.get(reverse(url_name, kwargs=kwargs))
+            self.assertEqual(response.status_code, 302)  # Should redirect to login
+            self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_edit_nonexistent_service_request(self):
+        self.client.login(username='testuser', password='testpass123')
+        fake_uuid = uuid.uuid4()
+        response = self.client.get(
+            reverse('edit_service_request', kwargs={'request_number': fake_uuid})
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_quote_response_already_processed(self):
+        self.client.login(username='testuser', password='testpass123')
+        # First set the quote status to accepted
+        self.service_request.quote_status = 'accepted'
+        self.service_request.save()
+        
+        # Try to change it again
+        response = self.client.post(
+            reverse('quote_response', kwargs={'request_number': self.service_request.request_number}),
+            {'response': 'rejected'}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.service_request.refresh_from_db()
+        self.assertEqual(self.service_request.quote_status, 'accepted')  # Should remain accepted
