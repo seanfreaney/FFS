@@ -6,6 +6,7 @@ from unittest.mock import patch
 import uuid
 from django.contrib import messages
 from django.contrib.messages import get_messages
+import stripe
 
 class PaymentViewTests(TestCase):
     def setUp(self):
@@ -176,4 +177,26 @@ class PaymentViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    
+    @patch('stripe.PaymentIntent.create')
+    def test_create_payment_intent_stripe_error(self, mock_create):
+        """Test handling of Stripe API errors"""
+        self.client.force_login(self.user)
+        mock_create.side_effect = stripe.error.StripeError("Test error")
+        
+        response = self.client.post(
+            reverse('create_payment_intent', args=[self.service_request.request_number])
+        )
+        
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json()['error'], 'Test error')
+
+    def test_payment_success_invalid_request(self):
+        """Test payment success view with non-existent request number"""
+        self.client.login(username='testuser', password='testpass123')
+        fake_uuid = uuid.uuid4()
+        
+        response = self.client.get(
+            reverse('payment_success', args=[fake_uuid])
+        )
+        
+        self.assertEqual(response.status_code, 404)
