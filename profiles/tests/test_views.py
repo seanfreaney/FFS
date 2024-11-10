@@ -61,3 +61,53 @@ class TestProfileView(TestCase):
         )
         response = self.client.get(self.url)
         self.assertEqual(len(response.context['service_requests']), 1)
+
+    def test_profile_view_POST_invalid_data(self):
+        """Test POST request with invalid form data"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(self.url, {
+            'default_phone_number': 'invalid' * 50,  # Too long for CharField(max_length=20)
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['form'].is_valid())
+        
+    def test_profile_view_POST_empty_data(self):
+        """Test POST request with empty data (should be valid as all fields are optional)"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.post(self.url, {})
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Profile updated successfully')
+
+    def test_service_requests_ordered_by_created_on(self):
+        """Test that service requests are displayed in correct order (newest first)"""
+        self.client.login(username='testuser', password='testpass123')
+        # Create multiple service requests with different dates
+        ServiceRequest.objects.create(
+            user=self.user,
+            business_type='Retail',
+            monthly_revenue=5000.00,
+            monthly_transactions=100,
+            monthly_operating_costs=3000.00,
+            status='pending',
+            quote_status='pending'
+        )
+        ServiceRequest.objects.create(
+            user=self.user,
+            business_type='Service',
+            monthly_revenue=5000.00,
+            monthly_transactions=100,
+            monthly_operating_costs=3000.00,
+            status='pending',
+            quote_status='pending'
+        )
+        response = self.client.get(self.url)
+        requests = response.context['service_requests']
+        self.assertTrue(requests[0].created_on > requests[1].created_on)
+    
+    def test_on_profile_page_context(self):
+        """Test that on_profile_page context is True"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.url)
+        self.assertTrue(response.context['on_profile_page'])
