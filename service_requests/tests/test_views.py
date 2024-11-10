@@ -6,6 +6,7 @@ from service_requests.models import ServiceRequest, Document
 from decimal import Decimal
 import uuid
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class ServiceRequestViewTests(TestCase):
     def setUp(self):
@@ -240,3 +241,38 @@ class ServiceRequestViewTests(TestCase):
         response = self.client.get(reverse('service_request_list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['service_requests']), 0)
+
+    def test_service_request_detail_context(self):
+        """Test service request detail view provides correct context"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(
+            reverse('service_request_detail', 
+                   kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['service_request'], self.service_request)
+        self.assertEqual(response.context['stripe_public_key'], settings.STRIPE_PUBLIC_KEY)
+
+    def test_delete_service_request_get(self):
+        """Test delete confirmation page"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(
+            reverse('delete_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'service_requests/request_confirm_delete.html')
+
+    def test_delete_service_request_staff(self):
+        """Test staff user can delete any service request"""
+        staff_user = User.objects.create_user(
+            username='staffuser',
+            password='testpass123',
+            is_staff=True
+        )
+        self.client.force_login(staff_user)
+        
+        response = self.client.post(
+            reverse('delete_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(ServiceRequest.objects.filter(request_number=self.service_request.request_number).exists())
