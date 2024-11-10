@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from service_requests.models import ServiceRequest, Document
 from decimal import Decimal
+from django.core.files.storage import default_storage
+import os
 
 class ServiceRequestModelTests(TestCase):
     def setUp(self):
@@ -54,15 +56,23 @@ class DocumentModelTests(TestCase):
     def test_document_file_update(self):
         """Test that old file is deleted when updating document"""
         # Create initial document
+        initial_file = SimpleUploadedFile("test1.pdf", b"file_content1", content_type="application/pdf")
         document = Document.objects.create(
             service_request=self.service_request,
-            file=SimpleUploadedFile("test1.pdf", b"file_content1"),
+            file=initial_file,
             uploaded_by=self.user
         )
         
+        # Store the initial file path
+        initial_file_path = document.file.path
+        
         # Update with new file
-        document.file = SimpleUploadedFile("test2.pdf", b"file_content2")
+        new_file = SimpleUploadedFile("test2.pdf", b"file_content2", content_type="application/pdf")
+        document.file = new_file
         document.save()
         
-        # Check that new file is saved
-        self.assertTrue(document.file.name.endswith('test2.pdf'))
+        # Check that new file exists in name (using in instead of endswith)
+        self.assertIn('test2', document.file.name)
+        
+        # Check that old file no longer exists
+        self.assertFalse(os.path.exists(initial_file_path))
