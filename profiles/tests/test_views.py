@@ -111,3 +111,9 @@ class TestProfileView(TestCase):
         self.client.login(username='testuser', password='testpass123')
         response = self.client.get(self.url)
         self.assertTrue(response.context['on_profile_page'])
+
+    def test_profile_view_with_no_service_requests(self):
+        """Test profile view when user has no service requests"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.url)
+        self.assertEqual(len(response.context['service_requests']), 0)

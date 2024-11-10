@@ -9,6 +9,7 @@ class TestUserProfileModel(TestCase):
             password='testpass123'
         )
         self.profile = UserProfile.objects.get(user=self.user)
+        self.url = '/profile/'
 
     def test_profile_str_method(self):
         """Test the string representation of the UserProfile model"""
