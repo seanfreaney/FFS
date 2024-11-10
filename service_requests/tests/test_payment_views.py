@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from service_requests.models import ServiceRequest
 from unittest.mock import patch
 import uuid
+from django.contrib import messages
+from django.contrib.messages import get_messages
 
 class PaymentViewTests(TestCase):
     def setUp(self):
@@ -125,5 +127,33 @@ class PaymentViewTests(TestCase):
             reverse('create_payment_intent', args=[self.service_request.request_number])
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_payment_success_not_paid(self):
+        """Test payment success view when payment is not yet confirmed"""
+        self.client.force_login(self.user)
+        self.service_request.is_paid = False
+        self.service_request.save()
+        
+        response = self.client.get(
+            reverse('payment_success', args=[self.service_request.request_number])
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn("Payment received! Please wait", str(messages[0]))
+
+    def test_payment_success_already_paid(self):
+        """Test payment success view when payment is already confirmed"""
+        self.client.force_login(self.user)
+        self.service_request.is_paid = True
+        self.service_request.save()
+        
+        response = self.client.get(
+            reverse('payment_success', args=[self.service_request.request_number])
+        )
+        
+        self.assertEqual(response.status_code, 302)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn("Payment confirmed!", str(messages[0]))
 
     
