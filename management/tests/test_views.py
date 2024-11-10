@@ -362,3 +362,36 @@ class ManagementViewsTest(TestCase):
         )
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), 'Service request updated successfully.')
+
+    def test_document_upload_validation(self):
+        from service_requests.models import ServiceRequest
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        
+        test_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+        
+        self.client.login(username='staffuser', password='testpass123')
+        
+        # Test file upload
+        test_file = SimpleUploadedFile(
+            "test.exe",
+            b"content",
+            content_type="application/x-msdownload"
+        )
+        
+        response = self.client.post(
+            reverse('management:upload_owner_document', 
+            kwargs={'request_number': test_request.request_number}),
+            {'file': test_file}
+        )
+        
+        # Verify document was created
+        self.assertTrue(test_request.documents.exists())
+        self.assertEqual(response.status_code, 302)  # Redirects after successful upload
