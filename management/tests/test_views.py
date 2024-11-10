@@ -157,3 +157,56 @@ class ManagementViewsTest(TestCase):
             {}
         )
         self.assertEqual(response.status_code, 302)  # Should redirect to detail page
+
+    def test_service_request_detail_post(self):
+        # Create a test service request
+        from service_requests.models import ServiceRequest
+        
+        test_request = ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+
+        # Login as staff
+        self.client.login(username='staffuser', password='testpass123')
+
+        # Test valid status update
+        response = self.client.post(
+            reverse('management:service_request_detail', kwargs={'request_number': test_request.request_number}),
+            {'status': 'in_progress', 'quote_amount': '2500.00'}
+        )
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify updates
+        test_request.refresh_from_db()
+        self.assertEqual(test_request.status, 'in_progress')
+        self.assertEqual(test_request.quote_amount, 2500.00)
+
+       # Test invalid quote amount
+        response = self.client.post(
+            reverse('management:service_request_detail', kwargs={'request_number': test_request.request_number}),
+            {'status': 'completed', 'quote_amount': 'invalid'}
+        )
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify status didn't change due to invalid input
+        test_request.refresh_from_db()
+        self.assertEqual(test_request.status, 'in_progress')
+        self.assertEqual(test_request.quote_amount, 2500.00)
+
+        # Test with valid quote amount
+        response = self.client.post(
+            reverse('management:service_request_detail', kwargs={'request_number': test_request.request_number}),
+            {'status': 'completed', 'quote_amount': '3000.00'}
+        )
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify both fields updated
+        test_request.refresh_from_db()
+        self.assertEqual(test_request.status, 'completed')
+        self.assertEqual(test_request.quote_amount, 3000.00)
