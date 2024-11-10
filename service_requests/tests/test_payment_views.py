@@ -85,4 +85,31 @@ class PaymentViewTests(TestCase):
             reverse('service_request_detail', args=[self.service_request.request_number])
         )
 
+    def test_check_payment_status(self):
+        """Test the payment status check endpoint"""
+        self.client.force_login(self.user)
+        
+        # Initial state (not paid)
+        response = self.client.get(
+            reverse('check_payment_status', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'is_paid': False,
+            'status': 'pending'
+        })
+        
+        # Update service request to paid
+        self.service_request.mark_as_paid()
+        
+        # Check updated state
+        response = self.client.get(
+            reverse('check_payment_status', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'is_paid': True,
+            'status': 'in_progress'
+        })
+
     
