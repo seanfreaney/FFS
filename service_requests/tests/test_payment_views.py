@@ -60,3 +60,15 @@ class PaymentViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/accounts/login/'))
+
+    def test_create_payment_intent_invalid_request(self):
+        """Test payment intent creation with unpaid/unaccepted quote"""
+        self.client.force_login(self.user)
+        # Set quote status to pending
+        self.service_request.quote_status = 'pending'
+        self.service_request.save()
+        
+        response = self.client.post(
+            reverse('create_payment_intent', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 404)
