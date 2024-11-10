@@ -210,3 +210,58 @@ class ManagementViewsTest(TestCase):
         test_request.refresh_from_db()
         self.assertEqual(test_request.status, 'completed')
         self.assertEqual(test_request.quote_amount, 3000.00)
+
+    def test_management_dashboard_counts(self):
+        # Create multiple service requests with different statuses
+        from service_requests.models import ServiceRequest
+        
+        # Create 2 pending requests
+        ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business 1',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+        ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='pending',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business 2',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+        
+        # Create 1 in_progress request
+        ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='in_progress',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business 3',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+        
+        # Create 1 completed request
+        ServiceRequest.objects.create(
+            request_number=uuid.uuid4(),
+            status='completed',
+            monthly_revenue=1000.00,
+            user=self.regular_user,
+            business_type='Test Business 4',
+            monthly_transactions=100,
+            monthly_operating_costs=500.00
+        )
+
+        # Login as staff and check the dashboard
+        self.client.login(username='staffuser', password='testpass123')
+        response = self.client.get(reverse('management:management_dashboard'))
+        
+        # Verify the counts in the context
+        self.assertEqual(response.context['pending_count'], 2)
+        self.assertEqual(response.context['in_progress_count'], 1)
+        self.assertEqual(response.context['completed_count'], 1)
