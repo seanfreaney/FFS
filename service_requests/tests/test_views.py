@@ -287,3 +287,18 @@ class ServiceRequestViewTests(TestCase):
         self.assertTemplateUsed(response, 'service_requests/edit_service_request.html')
         self.assertTrue('form' in response.context)
         self.assertTrue('document_form' in response.context)
+
+    def test_create_service_request_invalid_document(self):
+        """Test service request creation with invalid document type"""
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'business_type': 'Test Business',
+            'monthly_revenue': '1000.00',
+            'monthly_transactions': '100',
+            'monthly_operating_costs': '500.00',
+            'file': SimpleUploadedFile("test.exe", b"invalid_content", content_type="application/x-msdownload"),
+            'is_bank_statement': True,
+        }
+        response = self.client.post(reverse('create_service_request'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['document_form'].errors)
