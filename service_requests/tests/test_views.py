@@ -230,3 +230,13 @@ class ServiceRequestViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['form'].errors)
+
+    def test_service_request_list_empty(self):
+        """Test service request list view with no requests"""
+        # Create new user with no requests
+        new_user = User.objects.create_user(username='newuser', password='testpass123')
+        self.client.force_login(new_user)
+        
+        response = self.client.get(reverse('service_request_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['service_requests']), 0)
