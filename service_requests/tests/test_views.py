@@ -276,3 +276,14 @@ class ServiceRequestViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(ServiceRequest.objects.filter(request_number=self.service_request.request_number).exists())
+
+    def test_edit_service_request_get(self):
+        """Test edit service request form display"""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(
+            reverse('edit_service_request', kwargs={'request_number': self.service_request.request_number})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'service_requests/edit_service_request.html')
+        self.assertTrue('form' in response.context)
+        self.assertTrue('document_form' in response.context)
