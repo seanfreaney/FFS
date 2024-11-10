@@ -15,15 +15,59 @@ It was my intention to keep the design as simple as possible. Initially,
 
 ## Features
 
+- Base.html
+ - Navbar
+  - fixed position header with dark theme
+  - conditional rendering of links based on user authentication status
+  - links to Home, Management, Profiles, Service Requests and Sign In/Register
+  - hamburger menu for authenticated users for better user experience
 
+ - Messages
+  - Django messages framework used to provide feedback to users
 
-### Home
+ - Footer
+  - fixed position footer with dark theme
+  - copyright information (for the purpose of the project)
+  - social media links with accessibility attributes
+
+- 404.html
+ - extends base.html
+ - 404 error page with simple explanation
+ - return to homepage button
+
+### Home App
+
+- Index.html    
+ - Main section
+  - hero section with main heading and tagline
+  - about us card with company introduction and three core principles
+  - services card with brief introduction to the services offered
+  - call to action button to request services
+  - newsletter signup form for webmarketing
 
 ### Management
 
+- management_dashboard.html
+
+- service_request_detail.html
+
+- service_request_management.html
+
 ### Profiles
 
+- Profile.html
+
 ### Service_Requests
+
+- create_service_request.html
+
+- edit_service_request.html
+
+- service_request_list.html
+
+- service_request_detail.html
+
+- request_confirm_delete.html
 
 
 ## Business Model / Marketing Strategy
