@@ -53,3 +53,10 @@ class PaymentViewTests(TestCase):
             currency='eur',
             metadata={'request_number': str(self.service_request.request_number)}
         )
+
+    def test_create_payment_intent_unauthorized(self):
+        response = self.client.post(
+            reverse('create_payment_intent', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/accounts/login/'))
