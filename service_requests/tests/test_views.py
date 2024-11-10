@@ -49,14 +49,20 @@ class ServiceRequestViewTests(TestCase):
     def test_create_service_request_post(self):
         self.client.login(username='testuser', password='testpass123')
         
-        # Include ALL required fields in the POST data
+        # Create a test file for the document form
+        test_file = SimpleUploadedFile(
+            "test_doc.pdf",
+            b"file_content",
+            content_type="application/pdf"
+        )
+        
         data = {
             'business_type': 'Test Business',
             'monthly_revenue': '1000.00',
             'monthly_transactions': '100',
             'monthly_operating_costs': '500.00',
-            'status': 'pending',
-            'quote_status': 'pending'
+            'file': test_file,
+            'is_bank_statement': True,
         }
         
         response = self.client.post(reverse('create_service_request'), data)
