@@ -112,4 +112,18 @@ class PaymentViewTests(TestCase):
             'status': 'in_progress'
         })
 
+    def test_create_payment_intent_wrong_user(self):
+        """Test creating payment intent for another user's service request"""
+        # Create another user
+        other_user = User.objects.create_user(
+            username='otheruser',
+            password='testpass123'
+        )
+        self.client.force_login(other_user)
+        
+        response = self.client.post(
+            reverse('create_payment_intent', args=[self.service_request.request_number])
+        )
+        self.assertEqual(response.status_code, 404)
+
     
