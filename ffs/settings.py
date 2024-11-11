@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 import stripe
 from pathlib import Path
 
@@ -34,7 +35,7 @@ SECRET_KEY = 'django-insecure-g5uzdyg#o06kyyrx0p^$6n=mil6!s4qo1c11owa40vn#@%$ckw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ffs-freaney-financial-services.herokuapp.com', '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -120,12 +121,17 @@ WSGI_APPLICATION = 'ffs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net',
