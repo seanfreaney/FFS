@@ -180,19 +180,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if 'USE_AWS' in os.environ:
-    print("AWS settings being loaded")
-    print(f"AWS_STORAGE_BUCKET_NAME: {os.environ.get('AWS_STORAGE_BUCKET_NAME')}")
-    print(f"AWS_S3_REGION_NAME: {os.environ.get('AWS_S3_REGION_NAME')}")
-    print(f"AWS_ACCESS_KEY_ID exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
-    print(f"AWS_SECRET_ACCESS_KEY exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
-    print(f"STATICFILES_STORAGE: custom_storages.StaticStorage")
-
-    try:
-        import boto3
-        s3 = boto3.client('s3')
-        print("Successfully created S3 client")
-    except Exception as e:
-        print(f"Error creating S3 client: {str(e)}")
 
     # Cache control
     AWS_S3_OBJECT_PARAMETERS = {
