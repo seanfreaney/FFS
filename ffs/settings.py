@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-g5uzdyg#o06kyyrx0p^$6n=mil6!s4qo1c11owa40vn#@%$ckw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ffs-freaney-financial-services.herokuapp.com', '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ffs-freaney-financial-services-10d1650d84d3.herokuapp.com', '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
