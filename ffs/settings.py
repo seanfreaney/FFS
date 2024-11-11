@@ -16,12 +16,6 @@ import dj_database_url
 import stripe
 from pathlib import Path
 
-try:
-    import env
-    print("env.py found and imported!")
-except ImportError:
-    print("env.py not found!")
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
