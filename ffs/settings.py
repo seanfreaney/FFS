@@ -143,10 +143,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# AWS Configuration
-print("Checking AWS configuration...")
-print(f"USE_AWS environment variable: {os.environ.get('USE_AWS')}")
-
 if os.environ.get('USE_AWS') == 'True':
     AWS_S3_OBJECT_PARAMETERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
@@ -160,13 +156,16 @@ if os.environ.get('USE_AWS') == 'True':
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
     STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'ffs.custom_storages.StaticStorage'
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
 
     MEDIAFILES_LOCATION = 'media'
-    DEFAULT_FILE_STORAGE = 'ffs.custom_storages.MediaStorage'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-
+else:
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Stripe Settings
 STRIPE_CURRENCY = os.environ.get('STRIPE_CURRENCY', 'eur')
