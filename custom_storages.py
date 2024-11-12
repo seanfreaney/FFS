@@ -8,8 +8,10 @@ logger.error("Loading custom_storages.py")
 
 class StaticStorage(S3Boto3Storage):
     location = settings.STATICFILES_LOCATION
+    default_acl = 'public-read'
     logger.error(f"StaticStorage initialized with location: {location}")
 
 class MediaStorage(S3Boto3Storage):
     location = settings.MEDIAFILES_LOCATION
+    default_acl = 'public-read'
     logger.error(f"MediaStorage initialized with location: {location}")

@@ -171,6 +171,28 @@ if os.environ.get('USE_AWS') == 'True':
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 
     print(f"Static URL: {STATIC_URL}")
+
+    # Add these AWS CORS settings
+    AWS_S3_CORS_CONFIGURATION = {
+        'CORSRules': [{
+            'AllowedHeaders': ['*'],
+            'AllowedMethods': ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
+            'AllowedOrigins': [
+                'https://ffs-freaney-financial-services-10d1650d84d3.herokuapp.com',
+                'https://*.gitpod.io',
+                'http://localhost:8000',
+                'http://127.0.0.1:8000',
+            ],
+            'ExposeHeaders': ['ETag'],
+            'MaxAgeSeconds': 3000
+        }]
+    }
+
+    # Make sure files are served with correct headers
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
 else:
     print("AWS Settings not applied - USE_AWS is not 'True'")
 
