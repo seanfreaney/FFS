@@ -194,6 +194,12 @@ if os.environ.get('USE_AWS') == 'True':
     STATICFILES_LOCATION = 'static'
     MEDIAFILES_LOCATION = 'media'
 
+    # First verify AWS is configured
+    print("Static files configuration:")
+    print(f"STATIC_URL: {STATIC_URL}")
+    print(f"STATICFILES_STORAGE: {STATICFILES_STORAGE}")
+    print(f"AWS_S3_CUSTOM_DOMAIN: {AWS_S3_CUSTOM_DOMAIN}")
+
 
 # Stripe Settings
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
