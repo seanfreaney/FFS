@@ -175,9 +175,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+print("USE_AWS value:", os.environ.get('USE_AWS'))
 if os.environ.get('USE_AWS') == 'True':
+    print("AWS Settings:", {
+        'bucket': AWS_STORAGE_BUCKET_NAME,
+        'region': AWS_S3_REGION_NAME,
+        'access_key_exists': bool(AWS_ACCESS_KEY_ID),
+        'secret_key_exists': bool(AWS_SECRET_ACCESS_KEY),
+    })
 
-    print("AWS Settings are being loaded!")
     # Cache control
     AWS_S3_OBJECT_PARAMETERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
