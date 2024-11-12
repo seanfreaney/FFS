@@ -154,10 +154,14 @@ if os.environ.get('USE_AWS') == 'True':
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     
+    # Additional AWS settings
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_FILE_OVERWRITE = False
+    
     # Use S3 directly for static files
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     AWS_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
     
     # Media files
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -168,6 +172,9 @@ if os.environ.get('USE_AWS') == 'True':
     print(f"DEBUG: AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
     print(f"DEBUG: AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
     print(f"DEBUG: Storage Backend: {STATICFILES_STORAGE}")
+    print(f"DEBUG: AWS Location: {AWS_LOCATION}")
+    print(f"DEBUG: Static URL: {STATIC_URL}")
+    print(f"DEBUG: Default ACL: {AWS_DEFAULT_ACL}")
 else:
     STATIC_URL = '/static/'
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
