@@ -154,27 +154,23 @@ if os.environ.get('USE_AWS') == 'True':
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     
-    # Additional AWS settings
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_FILE_OVERWRITE = False
+    # Force AWS settings
+    AWS_DEFAULT_ACL = None  # Let the bucket policy handle permissions
+    AWS_S3_FILE_OVERWRITE = True
+    AWS_QUERYSTRING_AUTH = False
     
     # Static files configuration
-    AWS_LOCATION = 'static'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # Use local first
     
-    # Media files configuration
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
-
-    # Debug prints after all AWS settings are defined
-    print("DEBUG: AWS Settings Loading")
-    print(f"DEBUG: AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
-    print(f"DEBUG: AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
-    print(f"DEBUG: Storage Backend: {STATICFILES_STORAGE}")
-    print(f"DEBUG: AWS Location: {AWS_LOCATION}")
-    print(f"DEBUG: Static URL: {STATIC_URL}")
-    print(f"DEBUG: Default ACL: {AWS_DEFAULT_ACL}")
+    # After collection, use S3
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    
+    # Debug prints
+    print("DEBUG: Starting collectstatic process...")
+    print(f"DEBUG: Static files will be stored at: {STATIC_URL}")
+    print(f"DEBUG: Using bucket: {AWS_STORAGE_BUCKET_NAME}")
+    print(f"DEBUG: Region: {AWS_S3_REGION_NAME}")
 else:
     STATIC_URL = '/static/'
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
