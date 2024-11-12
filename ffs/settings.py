@@ -152,29 +152,10 @@ if os.environ.get('USE_AWS') == 'True':
     AWS_S3_REGION_NAME = 'eu-north-1'
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    
-    # Force AWS settings
-    AWS_DEFAULT_ACL = None  # Let the bucket policy handle permissions
-    AWS_S3_FILE_OVERWRITE = True
-    AWS_QUERYSTRING_AUTH = False
     
     # Static files configuration
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # Use local first
-    
-    # After collection, use S3
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
-    
-    # Debug prints
-    print("DEBUG: Starting collectstatic process...")
-    print(f"DEBUG: Static files will be stored at: {STATIC_URL}")
-    print(f"DEBUG: Using bucket: {AWS_STORAGE_BUCKET_NAME}")
-    print(f"DEBUG: Region: {AWS_S3_REGION_NAME}")
-else:
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'ffs.custom_storage.StaticStorage'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 
 # Stripe Settings
 STRIPE_CURRENCY = os.environ.get('STRIPE_CURRENCY', 'eur')
