@@ -5,6 +5,9 @@ Django settings for ffs project.
 from pathlib import Path
 import os
 import dj_database_url
+import logging
+logging.basicConfig(level=logging.ERROR)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -142,20 +145,26 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if os.environ.get('USE_AWS') == 'True':
-    # AWS Settings
-    AWS_S3_OBJECT_PARAMETERS = {
-        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
-        'CacheControl': 'max-age=94608000',
-    }
-    
-    AWS_STORAGE_BUCKET_NAME = 'ffs-freaney-financial-services'
-    AWS_S3_REGION_NAME = 'eu-north-1'
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    
-    # Static files configuration
-    STATICFILES_STORAGE = 'ffs.custom_storage.StaticStorage'
-    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+    try:
+        # AWS Settings
+        AWS_S3_OBJECT_PARAMETERS = {
+            'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+            'CacheControl': 'max-age=94608000',
+        }
+        
+        AWS_STORAGE_BUCKET_NAME = 'ffs-freaney-financial-services'
+        AWS_S3_REGION_NAME = 'eu-north-1'
+        AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+        
+        # Static files configuration
+        STATICFILES_STORAGE = 'ffs.custom_storage.StaticStorage'
+        STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+        
+        logging.error("AWS Configuration complete")
+    except Exception as e:
+        logging.error(f"Error in AWS configuration: {str(e)}")
+        raise
 
 # Stripe Settings
 STRIPE_CURRENCY = os.environ.get('STRIPE_CURRENCY', 'eur')
