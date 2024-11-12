@@ -160,17 +160,20 @@ if os.environ.get('USE_AWS') == 'True':
     print(f"AWS Credentials exist: {bool(AWS_ACCESS_KEY_ID) and bool(AWS_SECRET_ACCESS_KEY)}")
     print(f"AWS Domain: {AWS_S3_CUSTOM_DOMAIN}")
 
-    # Static and media files
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    # Static and media files configuration
     STATICFILES_LOCATION = 'static'
-    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-    MEDIAFILES_LOCATION = 'media'
-
-    # Override static and media URLs in production
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 
-    print(f"Static URL: {STATIC_URL}")
+    # Cache control
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
 
     # Add these AWS CORS settings
     AWS_S3_CORS_CONFIGURATION = {
@@ -186,12 +189,6 @@ if os.environ.get('USE_AWS') == 'True':
             'ExposeHeaders': ['ETag'],
             'MaxAgeSeconds': 3000
         }]
-    }
-
-    # Make sure files are served with correct headers
-    AWS_S3_OBJECT_PARAMETERS = {
-        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
-        'CacheControl': 'max-age=94608000',
     }
 else:
     print("AWS Settings not applied - USE_AWS is not 'True'")
