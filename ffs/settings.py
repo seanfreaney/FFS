@@ -142,10 +142,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if os.environ.get('USE_AWS') == 'True':
-    print("DEBUG: AWS Settings Loading")
-    print(f"DEBUG: AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
-    print(f"DEBUG: AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
-    print(f"DEBUG: Storage Backend: {STATICFILES_STORAGE}")
     # AWS Settings
     AWS_S3_OBJECT_PARAMETERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
@@ -166,6 +162,12 @@ if os.environ.get('USE_AWS') == 'True':
     # Media files
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+    # Debug prints after all AWS settings are defined
+    print("DEBUG: AWS Settings Loading")
+    print(f"DEBUG: AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
+    print(f"DEBUG: AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
+    print(f"DEBUG: Storage Backend: {STATICFILES_STORAGE}")
 else:
     STATIC_URL = '/static/'
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
