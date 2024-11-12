@@ -175,10 +175,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-if 'USE_AWS' in os.environ:
+if os.environ.get('USE_AWS') == 'True':
     print("AWS Settings are being loaded!")
+    # Add these debug lines
     logging.getLogger('boto3').setLevel(logging.DEBUG)
     logging.getLogger('botocore').setLevel(logging.DEBUG)
+    print(f"AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
+    print(f"AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
+    print(f"AWS Bucket Name: {os.environ.get('AWS_STORAGE_BUCKET_NAME')}")
 
     # Cache control
     AWS_S3_OBJECT_PARAMETERS = {
