@@ -180,6 +180,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if 'USE_AWS' in os.environ:
+    print("AWS settings loading")
+    try:
+        import boto3
+        from storages.backends.s3boto3 import S3Boto3Storage
+        print("boto3 and django-storages imported successfully")
+    except ImportError as e:
+        print(f"Error importing AWS libraries: {str(e)}")
 
     # Cache control
     AWS_S3_OBJECT_PARAMETERS = {
