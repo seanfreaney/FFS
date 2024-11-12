@@ -176,14 +176,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if os.environ.get('USE_AWS') == 'True':
-    print("AWS Settings are being loaded!")
-    # Add these debug lines
-    logging.getLogger('boto3').setLevel(logging.DEBUG)
-    logging.getLogger('botocore').setLevel(logging.DEBUG)
-    print(f"AWS Access Key exists: {bool(os.environ.get('AWS_ACCESS_KEY_ID'))}")
-    print(f"AWS Secret Key exists: {bool(os.environ.get('AWS_SECRET_ACCESS_KEY'))}")
-    print(f"AWS Bucket Name: {os.environ.get('AWS_STORAGE_BUCKET_NAME')}")
-
     # Cache control
     AWS_S3_OBJECT_PARAMETERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
@@ -206,8 +198,6 @@ if os.environ.get('USE_AWS') == 'True':
     # Override static and media URLs in production
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-
-    
 
 
 # Stripe Settings
