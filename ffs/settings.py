@@ -13,9 +13,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY','')
 
 DEBUG = 'DEVELOPMENT' in os.environ
 
-ALLOWED_HOSTS = ['ffs-freaney-financial-services-10d1650d84d3.herokuapp.com', 
-                 '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', 
-                 '127.0.0.1', 
+ALLOWED_HOSTS = ['ffs-freaney-financial-services-10d1650d84d3.herokuapp.com',
+                 '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net',
+                 '127.0.0.1',
                  'localhost',
                  '.gitpod.io']
 
@@ -163,7 +163,7 @@ if 'USE_AWS' in os.environ:
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 else:
     STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'   
+    MEDIA_URL = '/media/'
 
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
