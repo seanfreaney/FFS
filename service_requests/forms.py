@@ -39,22 +39,26 @@ class DocumentForm(forms.ModelForm):
 
     def clean_file(self):
         file = self.cleaned_data.get('file')
-        if file:
-            # Get the file extension and content type
-            ext = file.name.split('.')[-1].lower()
-            content_type = file.content_type
+        
+        # Skip validation if no new file is uploaded
+        if not file or not hasattr(file, 'content_type'):
+            return file
             
-            # Define allowed types
-            allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png']
-            allowed_content_types = [
-                'application/pdf',
-                'image/jpeg',
-                'image/png',
-                'image/jpg'
-            ]
-            
-            if ext not in allowed_extensions or content_type not in allowed_content_types:
-                raise forms.ValidationError(
-                    'Invalid file type. Only PDF and image files (JPG, JPEG, PNG) are allowed.'
-                )
+        # Only validate new file uploads
+        ext = file.name.split('.')[-1].lower()
+        content_type = file.content_type
+        
+        # Define allowed types
+        allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png']
+        allowed_content_types = [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+            'image/jpg'
+        ]
+        
+        if ext not in allowed_extensions or content_type not in allowed_content_types:
+            raise forms.ValidationError(
+                'Invalid file type. Only PDF and image files (JPG, JPEG, PNG) are allowed.'
+            )
         return file
