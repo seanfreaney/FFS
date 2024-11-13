@@ -10,7 +10,7 @@
 {% block meta_keywords %}, service request tracking, management accounts status, financial service portal, document management{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'service_requests/css/stripe.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stripe.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -22,7 +22,7 @@
         const stripePublicKey = "{{ stripe_public_key }}";
     </script>
     
-    <script src="{% static 'service_requests/js/stripe_elements.js' %}"></script>
+    <script src="{% static 'js/stripe_elements.js' %}"></script>
 {% endblock %}
 
 {% block content %}
