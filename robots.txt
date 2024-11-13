@@ -1,0 +1,4 @@
+User-agent: *
+
+Disallow: /profiles/
+Sitemap: https://ffs-freaney-financial-services-10d1650d84d3.herokuapp.com/sitemap.xml
