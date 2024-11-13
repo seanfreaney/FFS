@@ -1,20 +1,23 @@
-// Initialize Stripe
-const stripe = Stripe(stripePublicKey);
-
-// Create an instance of Elements
-const elements = stripe.elements();
-
-// Create the card Element
-const card = elements.create('card');
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Mount the card Element
-    card.mount('#card-element');
-    
-    const paymentButton = document.getElementById('payment-button');
+    // First check if we're on a page with the payment form
     const paymentForm = document.getElementById('payment-form');
+    const cardElement = document.getElementById('card-element');
     
-    if (paymentForm) {
+    if (paymentForm && cardElement) {
+        console.log('Stripe Public Key:', stripePublicKey);
+        
+        // Initialize Stripe
+        const stripe = Stripe(stripePublicKey);
+        
+        // Create an instance of Elements
+        const elements = stripe.elements();
+        
+        // Create and mount the card Element
+        const card = elements.create('card');
+        card.mount('#card-element');
+        
+        const paymentButton = document.getElementById('payment-button');
+        
         paymentForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -30,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-CSRFToken': csrfToken
                     }
                 });
+                
+                console.log('Payment Intent Response:', await response.clone().json());
                 
                 const data = await response.json();
                 
@@ -84,15 +89,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 paymentButton.disabled = false;
             }
         });
+        
+        // Handle real-time validation errors from the card Element
+        card.on('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
     }
-    
-    // Handle real-time validation errors from the card Element
-    card.on('change', function(event) {
-        const displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
-        }
-    });
 });
