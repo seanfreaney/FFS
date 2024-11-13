@@ -5,8 +5,6 @@ Django settings for ffs project.
 from pathlib import Path
 import os
 import dj_database_url
-import logging.handlers
-logging.basicConfig(level=logging.ERROR)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,22 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY','')
 
 DEBUG = 'DEVELOPMENT' in os.environ
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-        },
-    },
-}
 
 ALLOWED_HOSTS = ['ffs-freaney-financial-services-10d1650d84d3.herokuapp.com', 
                  '8000-seanfreaney-ffs-67hn3ha2k05.ws.codeinstitute-ide.net', 
