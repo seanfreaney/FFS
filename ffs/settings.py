@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY','')
 
-DEBUG = True if os.environ.get('DEVELOPMENT') or os.environ.get('DEBUG') else False
+DEBUG = 'DEVELOPMENT' in os.environ
 
 LOGGING = {
     'version': 1,
