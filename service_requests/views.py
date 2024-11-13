@@ -46,13 +46,33 @@ def service_request_detail(request, request_number):
         user=request.user
     )
     
-    # Debug print
+    # Add debug prints
+    print(f"Stripe Public Key: {settings.STRIPE_PUBLIC_KEY}")
+    print(f"Service Request Quote Amount: {service_request.quote_amount}")
     print(f"Service Request Status - is_paid: {service_request.is_paid}, status: {service_request.status}")
     
     context = {
         'service_request': service_request,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+        'client_secret': '',
     }
+    
+    # Generate client secret if payment is needed
+    if service_request.quote_status == 'accepted' and not service_request.is_paid:
+        try:
+            intent = stripe.PaymentIntent.create(
+                amount=int(service_request.quote_amount * 100),
+                currency='eur',
+                metadata={
+                    'service_request_id': service_request.request_number
+                }
+            )
+            context['client_secret'] = intent.client_secret
+            print(f"Payment Intent Created: {intent.id}")
+        except Exception as e:
+            print(f"Error creating payment intent: {str(e)}")
+            messages.error(request, "Unable to process payment at this time.")
+    
     return render(request, 'service_requests/service_request_detail.html', context)
 
 @login_required
@@ -110,32 +130,31 @@ def quote_response(request, request_number):
 
 @login_required
 def create_payment_intent(request, request_number):
-    service_request = get_object_or_404(
-        ServiceRequest, 
-        request_number=request_number,
-        user=request.user,
-        quote_status='accepted',
-        is_paid=False
-    )
-    
     try:
+        service_request = get_object_or_404(ServiceRequest, request_number=request_number)
+        
+        # Add debug prints
+        print(f"Creating payment intent for request {request_number}")
+        print(f"Amount: {service_request.quote_amount}")
+        
+        # Create the payment intent
         intent = stripe.PaymentIntent.create(
-            amount=int(service_request.quote_amount * 100),
-            currency=settings.STRIPE_CURRENCY,
+            amount=int(service_request.quote_amount * 100),  # amount in cents
+            currency='eur',
             metadata={
-                'request_number': str(service_request.request_number)
+                'service_request_id': service_request.request_number
             }
         )
         
-        service_request.stripe_payment_intent_id = intent.id
-        service_request.save()
+        print(f"Payment Intent Created Successfully: {intent.id}")
         
         return JsonResponse({
             'clientSecret': intent.client_secret,
-            'requestNumber': service_request.request_number,
+            'requestNumber': service_request.request_number
         })
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=403)
+        print(f'Payment Intent Error: {str(e)}')
+        return JsonResponse({'error': str(e)}, status=400)  # Add status code
 
 @login_required
 def payment_success(request, request_number):
@@ -145,10 +164,20 @@ def payment_success(request, request_number):
         user=request.user
     )
     
+    # Add debug prints
+    print(f"Payment Success Handler - Request {request_number}")
+    print(f"Current status: is_paid={service_request.is_paid}, status={service_request.status}")
+    
+    if not service_request.is_paid:
+        service_request.is_paid = True
+        service_request.status = 'in_progress'
+        service_request.save()
+        print("Updated service request status to paid and in_progress")
+    
     if service_request.is_paid:
-        messages.success(request, "Payment confirmed! Your service request is now in progress.")
+        messages.success(request, PAYMENT_SUCCESS_MESSAGE)
     else:
-        messages.info(request, "Payment received! Please wait while we process your request.")
+        messages.info(request, PAYMENT_PROCESSING_MESSAGE)
     
     return redirect('service_request_detail', request_number=request_number)
 

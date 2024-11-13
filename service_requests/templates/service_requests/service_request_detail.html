@@ -15,13 +15,17 @@
 
 {% block extra_js %}
     <script src="https://js.stripe.com/v3/"></script>
-    
-    <script>
+    <script type="text/javascript">
+        // Add console.logs to verify these are set
+        const stripePublicKey = '{{ stripe_public_key|safe }}';
+        const csrfToken = '{{ csrf_token }}';
         const createPaymentIntentUrl = "{% url 'create_payment_intent' service_request.request_number %}";
-        const csrfToken = "{{ csrf_token }}";
-        const stripePublicKey = "{{ stripe_public_key }}";
+        console.log('Keys loaded:', {
+            stripePublicKey,
+            csrfToken,
+            createPaymentIntentUrl
+        });
     </script>
-    
     <script src="{% static 'js/stripe_elements.js' %}"></script>
 {% endblock %}
 
