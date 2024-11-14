@@ -336,6 +336,8 @@ Document connects to:
 
 ### Base.html
 
+- Base.html is the base template for all pages and provides a consistent structure for the website.
+
 ![Base.html](assets/images/base.png)
 
  - Navbar
@@ -364,6 +366,8 @@ Document connects to:
 ![Footer](assets/images/footer.png)
 
 ### Custom 404.html
+ 
+ - 404.html is the custom 404 error page.
 
  - extends base.html
  - 404 error page with simple explanation
@@ -374,6 +378,8 @@ Document connects to:
 ### Home App
 
 ### Index.html
+
+- Index.html is the homepage of the site and its purpose is to provide a brief introduction to the company and services offered.
 
  - Main section
   - hero section with main heading and tagline
@@ -388,33 +394,48 @@ Document connects to:
 
 ### Management App
 
+- Management App is the admin dashboard for the site. This is where the user can view all service requests and manage them.
+
 ### Management_dashboard.html
+
+- The management dashboard displays a count of service requests by status. It is intended that management can use this to assess their workload.
 ![Management Dashboard](assets/images/mgmt-dashboard.png)
-### service_request_detail.html
-![Service Request Detail](assets/images/mgmt-request-pending.png)
+
 ### service_request_management.html
+- This is the management view of the service requests list. The list can be filtered by status and creation date.
 ![Service Request Management](assets/images/mgmt-request.png)
+
+### service_request_detail.html
+- This is the management view of the service request detail page. The page displays the request details and allows the management to update the status of the request, the quote amount, upload FFS documents and download customer documents.
+![Service Request Detail](assets/images/mgmt-request-detail-pending.png)
+
 
 ### Profiles App
 
 ### Profile.html
+- The profile page allows the user to update their details and view their service requests.
 ![Profile](assets/images/profile.png)
 
 ### Service_Requests App
 
 ### create_service_request.html
+- This is the user view of the service request creation page. The page allows the user to input their details and upload a document.
 ![Create Service Request](assets/images/create-request.png)
 
 ### edit_service_request.html
-![Edit Service Request](assets/images/edit-request.png)
+- This is the user view of the service request edit page. The page allows the user to update their details and upload a document.
+![Edit Service Request](assets/images/request-edit.png)
 
 ### service_request_list.html
+- This is the user view of the service request list page. The page displays the user's service requests and allows them to view the status of each request.
 ![Service Request List](assets/images/request-list.png)
 
 ### service_request_detail.html
+- This is the user view of the service request detail page. The page displays the request details and allows the user to make payment, download the FFS documents and view the status of the request.
 ![Service Request Detail](assets/images/request-detail.png)
 
 ### request_confirm_delete.html
+- This is the user view of the service request delete confirmation page. The page allows the user to confirm the deletion of the request.
 ![Request Confirm Delete](assets/images/request-delete.png)
 
 
@@ -427,6 +448,8 @@ Document connects to:
 ### Sign Up
 
 ![Sign Up](assets/images/sign-up.png)
+
+### Password Reset
 
 ![Sign Up Password](assets/images/pword1.png)
 
