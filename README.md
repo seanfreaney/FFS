@@ -15,7 +15,7 @@ It was my intention to keep the design as simple as possible. Initially,
 
 ## Features
 
-- Base.html
+### Base.html
  - Navbar
   - fixed position header with dark theme
   - conditional rendering of links based on user authentication status
@@ -30,7 +30,7 @@ It was my intention to keep the design as simple as possible. Initially,
   - copyright information (for the purpose of the project)
   - social media links with accessibility attributes
 
-- 404.html
+### Custom 404.html
  - extends base.html
  - 404 error page with simple explanation
  - return to homepage button
@@ -72,12 +72,16 @@ It was my intention to keep the design as simple as possible. Initially,
 
 ## Business Model / Marketing Strategy
 
+### Business Model
+
+### Facebook mockup
+
 
 ### Manual Testing Table
 
 | Action    | Expectation | Result | 
 | ---------|:-------------------:|----------|
-| Click 'Home' link | directed to Recipe List | Pass |
+| Click 'Home' link | directed to Index.html | Pass |
 
 # Automated Tests Documentation
 
