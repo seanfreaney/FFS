@@ -368,6 +368,8 @@ Document connects to:
 
 ## E-Commerce Functionality
 
+## Frontend Implementation (stripe_element.js)
+
 ### Initial Setup and DOM Checks
 
 ```javascript
@@ -479,6 +481,231 @@ Manages:
 - Server response errors
 - Unexpected payment states
 - User feedback display
+
+## Webhook Implementation (webhooks.py)
+
+### Endpoint Configuration and Decorators
+
+```python
+@require_POST
+@csrf_exempt
+def webhook(request):
+"""Listen for webhooks from Stripe"""
+wh_secret = settings.STRIPE_WEBHOOK_SECRET
+stripe.api_key = settings.STRIPE_SECRET_KEY
+```
+
+Purpose:
+- Restricts to POST requests only
+- Bypasses CSRF for Stripe webhooks
+- Configures Stripe credentials
+
+### Webhook Data Extraction and Verification
+
+python
+payload = request.body
+sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+event = None
+try:
+event = stripe.Webhook.construct_event(
+payload, sig_header, wh_secret
+)
+except ValueError as e:
+# Invalid payload format
+return HttpResponse(content=str(e), status=400)
+except stripe.error.SignatureVerificationError as e:
+# Invalid signature
+return HttpResponse(content=str(e), status=400)
+except Exception as e:
+# Generic error handling
+return HttpResponse(content=str(e), status=400)
+```
+
+Handles:
+- Raw webhook payload extraction
+- Signature header retrieval
+- Event construction
+- Three levels of error catching:
+  1. Malformed payload
+  2. Invalid signature
+  3. Unexpected errors
+
+### Event Routing System
+
+```python
+handler = StripeWH_Handler(request)
+event_map = {
+'payment_intent.succeeded': handler.handle_payment_intent_succeeded,
+'payment_intent.payment_failed': handler.handle_payment_intent_payment_failed,
+}
+event_type = event['type']
+event_handler = event_map.get(event_type, handler.handle_event)
+response = event_handler(event)
+```
+
+Provides:
+- Handler instance creation
+- Event type mapping
+- Fallback handling
+- Response processing
+
+## Webhook Handler Implementation (webhook_handler.py)
+
+### Handler Class Initialization
+
+```python
+class StripeWH_Handler:
+"""Handle Stripe webhooks"""
+def init(self, request):
+self.request = request
+```
+
+Purpose:
+- Creates handler instance
+- Stores request context
+- Enables request access in handlers
+
+### Generic Event Handler
+
+
+```python
+def handle_event(self, event):
+"""Handle generic event"""
+return HttpResponse(content=str(event), status=200)
+``` 
+
+Manages:
+- Unknown event types
+- Logging opportunities
+- Default responses
+
+### Successful Payment Handler
+
+```python
+def handle_payment_intent_succeeded(self, event):
+"""Handle successful payment confirmation"""
+intent = event.data.object
+request_number = intent.metadata.request_number
+try:
+# Locate service request
+service_request = ServiceRequest.objects.get(
+request_number=request_number,
+stripe_payment_intent_id=intent.id
+)
+# Update payment status
+service_request.mark_as_paid()
+print(f"Payment confirmed for request {request_number}")
+return HttpResponse(
+content=f'Webhook received: {event["type"]} | SUCCESS: Payment confirmed',
+status=200)
+except ServiceRequest.DoesNotExist:
+print(f"Service request not found: {request_number}")
+return HttpResponse(
+content=f'Webhook received: {event["type"]} | ERROR: Service request not found',
+status=404)
+except Exception as e:
+return HttpResponse(
+content=f'Webhook received: {event["type"]} | ERROR: {str(e)}',
+status=500)
+```
+
+Handles:
+- Payment intent extraction
+- Request number retrieval
+- Database record location
+- Payment status updates
+- Error scenarios:
+  - Missing records
+  - Database errors
+  - General exceptions
+- Logging and debugging
+- Status responses
+
+### Failed Payment Handler
+
+```python
+def handle_payment_intent_payment_failed(self, event):
+"""Handle failed payment notification"""
+return HttpResponse(
+content=f'Webhook received: {event["type"]}',
+status=200)
+```
+
+Manages:
+- Failed payment logging
+- Error notification opportunities
+- Status acknowledgment
+
+## Helper Methods and Utilities
+
+### Payment Status Update
+
+```python
+def mark_as_paid(self):
+"""Update service request payment status"""
+self.is_paid = True
+self.paid_at = timezone.now()
+self.save()
+```
+
+Handles:
+- Payment status flag
+- Timestamp recording
+- Database updates
+
+### Error Handling Utilities
+
+```python
+def handleError(error):
+"""Process and display error messages"""
+console.error('Error:', error);
+const errorDiv = document.getElementById('card-errors');
+errorDiv.textContent = error.message;
+errorDiv.classList.add('alert', 'alert-danger');
+paymentButton.disabled = false;
+```
+
+Provides:
+- Error logging
+- User feedback
+- UI updates
+- Button state management
+
+## Complete System Integration
+
+### Payment Flow
+1. User submits payment form
+2. Frontend creates Payment Intent
+3. Card payment confirmed with Stripe
+4. Webhook received from Stripe
+5. Payment status verified
+6. Database updated
+7. Success response sent
+
+### Error Handling Flow
+1. Error occurs (frontend/backend)
+2. Error caught and logged
+3. Appropriate handler triggered
+4. User notified if applicable
+5. System state maintained
+6. Response sent to
+
+### Security Measures
+1. CSRF protection
+2. Signature verification
+3. Error handling
+4. Database validation
+5. Status verification
+6. Duplicate prevention
+
+### Monitoring and Debugging
+1. Console logging
+2. Server-side prints
+3. Error tracking
+4. Status monitoring
+5. Response logging
+6. Database state tracking
+
 
 
 
