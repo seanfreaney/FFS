@@ -8,10 +8,18 @@ My Goal was to create a website that would allow me to provide a range of servic
 
 ### Wire Frames
 
-It was my intention to keep the design as simple as possible. Initially, 
+It was my intention to keep the design as simple as possible. Initially, i only envisaged a two or three page website. However, as I started to develop the project, I realised that I would need to create more pages and views to manage the functionality that I want to offer to users.
 
 - FFS Wireframes
+![Wireframe](assets/images/wire-home.png)
 
+![Wireframe](assets/images/wire-mgmt.png)
+
+![Wireframe](assets/images/wire-make-request.png)
+
+![Wireframe](assets/images/wire-profile.png)
+
+![Wireframe](assets/images/wire-request-detail.png)
 
 ## Models
 
@@ -502,7 +510,7 @@ Purpose:
 
 ### Webhook Data Extraction and Verification
 
-python
+``` python
 payload = request.body
 sig_header = request.META['HTTP_STRIPE_SIGNATURE']
 event = None
@@ -511,13 +519,13 @@ event = stripe.Webhook.construct_event(
 payload, sig_header, wh_secret
 )
 except ValueError as e:
-# Invalid payload format
+" # Invalid payload format" 
 return HttpResponse(content=str(e), status=400)
 except stripe.error.SignatureVerificationError as e:
-# Invalid signature
+" # Invalid signature" 
 return HttpResponse(content=str(e), status=400)
 except Exception as e:
-# Generic error handling
+" # Generic error handling" 
 return HttpResponse(content=str(e), status=400)
 ```
 
