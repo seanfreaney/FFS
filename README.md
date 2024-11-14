@@ -428,6 +428,10 @@ Document connects to:
 
 ![Sign Up](assets/images/sign-up.png)
 
+![Sign Up Password](assets/images/pword1.png)
+
+![Sign Up Password](assets/images/pword2.png)
+
 ### Sign Out
 
 ![Sign Out](assets/images/sign-out.png)

@@ -10,6 +10,7 @@
 {% block meta_keywords %}, edit service request, update financial documents, modify request details, accounting service update{% endblock %}
 
 {% block content %}
+<div class="container page-container">
     <h1>Edit Service Request</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -21,5 +22,6 @@
         
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
+</div>
 {% endblock %}
 
