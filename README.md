@@ -291,7 +291,77 @@ Special Functionality:
 String Representation:
 Returns document identifier with request number
 
+## Model Relationships
 
+### User Model (Django Built-in) Relationships
+
+Django User Model is the central model with connections to:
+
+1. UserProfile (One-to-One)
+   - Each User has exactly one UserProfile
+   - Created automatically via signal when User is created
+   - Relationship defined in UserProfile model:
+     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+2. ServiceRequest (One-to-Many)
+   - One User can have many ServiceRequests
+   - Relationship defined in ServiceRequest model:
+     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+3. Document (One-to-Many)
+   - One User can upload many Documents
+   - Tracks document uploader
+   - Relationship defined in Document model:
+     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL)
+
+
+### ServiceRequest Model Relationships
+
+ServiceRequest connects to:
+
+1. User (Many-to-One)
+   - Many ServiceRequests can belong to one User
+   - Deleting a User deletes all their ServiceRequests (CASCADE)
+
+2. Document (One-to-Many)
+   - One ServiceRequest can have multiple Documents
+   - Relationship defined in Document model:
+     service_request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+   - Accessible via 'documents' related name:
+     service_request.documents.all()
+
+
+### Document Model Relationships
+
+Document connects to:
+
+1. ServiceRequest (Many-to-One)
+   - Many Documents can belong to one ServiceRequest
+   - Deleting a ServiceRequest deletes all associated Documents (CASCADE)
+
+2. User (Many-to-One)
+   - Many Documents can be uploaded by one User
+   - If User is deleted, uploaded_by becomes NULL (SET_NULL)
+
+
+### NewsletterSubscriber Model
+
+- Standalone model with no relationships to other models
+- Stores unique email addresses independently
+
+
+### Key Points:
+1. Deletion Behavior:
+   - Deleting a User cascades to delete their Profile and ServiceRequests
+   - Deleting a ServiceRequest cascades to delete its Documents
+   - Deleting a User nullifies their Document uploads rather than deleting them
+
+2. Access Patterns:
+   - User → Profile: user.userprofile
+   - User → ServiceRequests: user.servicerequest_set.all()
+   - ServiceRequest → Documents: service_request.documents.all()
+   - Document → ServiceRequest: document.service_request
+   - Document → Uploader: document.uploaded_by
 
 ## Business Model / Marketing Strategy
 
