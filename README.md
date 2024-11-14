@@ -348,9 +348,9 @@ Document connects to:
 
 ![Navbar](assets/images/header-unauth.png)
 
-![Navbar](assets/images/header-button-hover-unauth.png)
+![Navbar](assets/images/header-drop-down-norm.png)
 
-![Navbar](assets/images/header-dropdown-mgmt.png)
+![Navbar](assets/images/header-drop-down-mgmt.png)
 
  - Messages
   - Django messages framework used to provide feedback to users
@@ -364,6 +364,7 @@ Document connects to:
 ![Footer](assets/images/footer.png)
 
 ### Custom 404.html
+
  - extends base.html
  - 404 error page with simple explanation
  - return to homepage button
@@ -372,7 +373,8 @@ Document connects to:
 
 ### Home App
 
-- Index.html    
+### Index.html
+
  - Main section
   - hero section with main heading and tagline
 ![Hero Section](assets/images/hero.png)
@@ -384,31 +386,51 @@ Document connects to:
   - newsletter signup form for webmarketing
 ![Newsletter Signup](assets/images/newsletter.png)
 
-### Management
+### Management App
 
-- management_dashboard.html
+### Management_dashboard.html
+![Management Dashboard](assets/images/mgmt-dashboard.png)
+### service_request_detail.html
+![Service Request Detail](assets/images/mgmt-request-pending.png)
+### service_request_management.html
+![Service Request Management](assets/images/mgmt-request.png)
 
-- service_request_detail.html
+### Profiles App
 
-- service_request_management.html
+### Profile.html
+![Profile](assets/images/profile.png)
 
-### Profiles
+### Service_Requests App
 
-- Profile.html
+### create_service_request.html
+![Create Service Request](assets/images/create-request.png)
 
-### Service_Requests
+### edit_service_request.html
+![Edit Service Request](assets/images/edit-request.png)
 
-- create_service_request.html
+### service_request_list.html
+![Service Request List](assets/images/request-list.png)
 
-- edit_service_request.html
+### service_request_detail.html
+![Service Request Detail](assets/images/request-detail.png)
 
-- service_request_list.html
-
-- service_request_detail.html
-
-- request_confirm_delete.html
+### request_confirm_delete.html
+![Request Confirm Delete](assets/images/request-delete.png)
 
 
+## Authentication
+
+### Sign In
+
+![Sign In](assets/images/sign-in.png)
+
+### Sign Up
+
+![Sign Up](assets/images/sign-up.png)
+
+### Sign Out
+
+![Sign Out](assets/images/sign-out.png)
 
 ## E-Commerce Functionality
 
@@ -753,7 +775,7 @@ Provides:
 
 
 
-## Authentication
+
 
 
 ## Business Model / Marketing Strategy
