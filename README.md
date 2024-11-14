@@ -331,6 +331,126 @@ Document connects to:
    - Document → ServiceRequest: document.service_request
    - Document → Uploader: document.uploaded_by
 
+## Views
+
+## FFS Views (`ffs/views.py`)
+### `custom_404(request, exception)`
+- Custom 404 error handler that renders a custom template when a page is not found
+- Provides a better user experience than the default Django 404 page
+
+## Home Views (`home/views.py`)
+### `index(request)`
+- Renders the main homepage of the site
+- Simple view that returns the index template
+
+### `newsletter_signup(request)`
+- Handles newsletter subscription functionality
+- Validates if email already exists in database
+- Creates new subscription if email is unique
+- Returns success/info messages
+- Redirects back to previous page
+
+## Profiles Views (`profiles/views.py`)
+### `@login_required profile(request)`
+- Protected view requiring user authentication
+- Displays and handles updates to user profile information
+- Features:
+  - Retrieves user profile and service requests
+  - Handles profile form submission and updates
+  - Orders service requests by creation date (newest first)
+  - Provides context for profile template including form and service requests
+
+## Service Requests Views (`service_requests/views.py`)
+### `@login_required create_service_request(request)`
+- Handles creation of new service requests
+- Features:
+  - Processes both service request and document forms
+  - Associates request with current user
+  - Sets initial status to 'pending'
+  - Handles file upload
+  - Provides success messages
+
+### `@login_required service_request_detail(request, request_number)`
+- Displays detailed view of a specific service request
+- Features:
+  - Retrieves specific request for current user
+  - Handles Stripe payment integration
+  - Creates payment intent if quote is accepted but unpaid
+  - Provides context for payment processing
+
+### `@login_required service_request_list(request)`
+- Displays list of all service requests for current user
+- Filters requests to show only those belonging to current user
+
+### `@login_required edit_service_request(request, request_number)`
+- Handles editing of existing service requests
+- Features:
+  - Updates both request details and associated documents
+  - Handles file replacement
+  - Provides success messages
+  - Validates user ownership
+
+### `@login_required quote_response(request, request_number)`
+- Processes user responses to quotes
+- Features:
+  - Handles quote acceptance/rejection
+  - Updates request status accordingly
+  - Validates quote status before processing
+
+### `@login_required create_payment_intent(request, request_number)`
+- Creates Stripe payment intent for processing payments
+- Features:
+  - Calculates payment amount
+  - Creates Stripe payment intent
+  - Includes debug logging
+  - Handles errors
+
+### `@login_required payment_success(request, request_number)`
+- Handles successful payment processing
+- Features:
+  - Updates request payment status
+  - Changes request status to 'in_progress'
+  - Provides appropriate success messages
+
+### `@login_required check_payment_status(request, request_number)`
+- AJAX endpoint for checking payment status
+- Returns JSON response with payment and request status
+
+### `@login_required delete_service_request(request, request_number)`
+- Handles service request deletion
+- Features:
+  - Validates user permissions
+  - Provides confirmation page
+  - Handles actual deletion
+  - Includes success messages
+
+## Management Views (`management/views.py`)
+### `@staff_member_required management_dashboard(request)`
+- Protected admin dashboard view
+- Features:
+  - Counts requests by status
+  - Provides overview statistics
+
+### `@staff_member_required service_request_management(request)`
+- Admin view for managing service requests
+- Features:
+  - Filters requests by status
+  - Sorts by date
+  - Provides comprehensive request management
+
+### `@staff_member_required service_request_detail(request, request_number)`
+- Admin detailed view of service requests
+- Features:
+  - Updates request status and quote amounts
+  - Handles document management
+  - Provides success messages
+
+### `@staff_member_required upload_owner_document(request, request_number)`
+- Handles document uploads by staff
+- Features:
+  - Creates new document records
+  - Associates documents with requests
+  - Provides success/error messages
 
 ## Templates/Functionality
 
@@ -828,7 +948,7 @@ Provides:
 
 ## Unfixed Bugs
 
-- I am unable to get static files pushed to S3 on my deployed site. I have tried several times and have been unable to resolve the issue. I have used the instructions from the Code Institute walkthrough project as well looking at documentation on AWS. Unfortunately This means that the user and management will not be able to upload and download their documents as desired. I understand that this is not ideal, however, I believe that the site is sufficiently functional to facilitate a platform for a small accounting company to manage customers and take payment for services while sharing documents with the customer over email..
+- I am unable to get static files pushed to S3 on my deployed site. I have tried several times and have been unable to resolve the issue. I have used the instructions from the Code Institute walkthrough project as well looking at documentation on AWS. Unfortunately, This means that the user and management will not be able to upload and download their documents as desired. I understand that this is not ideal, however, I believe that the site is sufficiently functional to facilitate a platform for a small accounting company to manage customers and take payment for services while sharing documents with the customer over email. This has also affected loading of stylesheets and can cause an error in the console relating to verifying the stylesheet. After performing rigorous testing, this doesn't seem to have affected the integration with Stripe and processing test payments has been successful.  
 
 ## Additional Features
 
@@ -841,12 +961,30 @@ Provides:
 
 # Testing
 
-
-### Manual Testing Table
+## Manual Testing Table
 
 | Action    | Expectation | Result | 
-| ---------|:-------------------:|----------|
+|-----------|:-------------------:|----------|
+| Internal Link tests | directed to the intended location | All Pass |
+| External Link tests | directed to the intended location | All Pass |
+| Button hover tests | change colour when hovered over | All Pass |
 | Click 'Home' link | directed to Index.html | Pass |
+| User Registration | form submits and creates new account | Pass |
+| Login with valid credentials | successful login and redirect to home | Pass |
+| Login with invalid credentials | error message displayed | Pass |
+| Password Reset Request | email sent with reset instructions | Pass |
+| Newsletter Signup | form submits and success message shown | Pass |
+| Create Service Request | form submits and request created | Pass |
+| Upload Document | file uploads and appears in request | Pass |
+| Delete Service Request | confirmation prompt and successful deletion | Pass |
+| Profile Update | form saves new information successfully | Pass |
+| Stripe Payment | test payment processes successfully | Pass |
+| Responsive Design (Mobile) | content adjusts to screen size | Pass |
+| Responsive Design (Tablet) | content adjusts to screen size | Pass |
+| Form Validation | error messages show for invalid inputs | Pass |
+| Logout | user session ends and redirects to home | Pass |
+| Management Dashboard Access | restricted to staff users only | Pass |
+| 404 Page | shows custom error page for invalid URLs | Pass |
 
 ## Automated Tests Documentation
 
@@ -1215,5 +1353,58 @@ Provides:
 - Verifies successful upload process
 - Confirms error handling
 
+### Validator Testing
+- __HTML__
+  - No errors returend through W3C validator.
+
+- __CSS__
+  - No errors returned through jigsaw validator.
+
+- __JS__
+  - No errors returned through jshint validator.
+
+- __Python__
+  - No errors returned through PEP8 CI Python Linter.
+
 
 ## Deployment
+
+### Fork the Repository
+1. Navigate to the [repository](https://github.com/freaney-financial-services/ffs)
+2. Click the "Fork" button in the top right corner
+3. Select your GitHub account as the destination
+
+### Clone the Repository
+1. Navigate to the [repository](https://github.com/freaney-financial-services/ffs)
+2. Click the "Code" button
+3. Select HTTPS and copy the provided URL
+4. Open your terminal
+5. Navigate to your desired directory
+6. Run `git clone <URL>` with your copied URL
+
+### Deploy to Heroku
+1. Create a new Heroku app
+2. In Heroku Settings, add the following Config Vars:
+   - `DATABASE_URL`: Your PostgreSQL database URL
+   - `SECRET_KEY`: Your Django secret key
+   - `STRIPE_PUBLIC_KEY`: Your Stripe public key
+   - `STRIPE_SECRET_KEY`: Your Stripe secret key
+   - `STRIPE_WH_SECRET`: Your Stripe webhook secret
+   - `AWS_ACCESS_KEY_ID`: Your AWS access key
+   - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+   - `USE_AWS`: Set to True
+   - `EMAIL_HOST_PASS`: Your email password
+   - `EMAIL_HOST_USER`: Your email address
+
+3. In your project:
+   - Create a `requirements.txt`: `pip freeze > requirements.txt`
+   - Create a `Procfile`: `web: gunicorn your_project_name.wsgi:application`
+   - Ensure `DEBUG = False` in settings.py
+   - Add Heroku app URL to `ALLOWED_HOSTS`
+
+4. Deploy:
+   - Connect GitHub repository to Heroku
+   - Enable automatic deploys (optional)
+   - Deploy main branch
+
+The live site can be found here: [FFS](https://ffs-freaney-financial-services-10d1650d84d3.herokuapp.com/)

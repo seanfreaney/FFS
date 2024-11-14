@@ -85,7 +85,7 @@ def upload_owner_document(request, request_number):
             file=request.FILES['file'],
             uploaded_by=request.user,
             document_type='owner',
-            is_bank_statement=False  # Or add a field in the form to specify this
+            is_bank_statement=False
         )
         messages.success(request, 'Document uploaded successfully.')
     else:
