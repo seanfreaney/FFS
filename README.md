@@ -13,63 +13,7 @@ It was my intention to keep the design as simple as possible. Initially,
 - FFS Wireframes
 
 
-## Templates
-
-### Base.html
- - Navbar
-  - fixed position header with dark theme
-  - conditional rendering of links based on user authentication status
-  - links to Home, Management, Profiles, Service Requests and Sign In/Register
-  - hamburger menu for authenticated users for better user experience
-
- - Messages
-  - Django messages framework used to provide feedback to users
-
- - Footer
-  - fixed position footer with dark theme
-  - copyright information (for the purpose of the project)
-  - social media links with accessibility attributes
-
-### Custom 404.html
- - extends base.html
- - 404 error page with simple explanation
- - return to homepage button
-
-### Home App
-
-- Index.html    
- - Main section
-  - hero section with main heading and tagline
-  - about us card with company introduction and three core principles
-  - services card with brief introduction to the services offered
-  - call to action button to request services
-  - newsletter signup form for webmarketing
-
-### Management
-
-- management_dashboard.html
-
-- service_request_detail.html
-
-- service_request_management.html
-
-### Profiles
-
-- Profile.html
-
-### Service_Requests
-
-- create_service_request.html
-
-- edit_service_request.html
-
-- service_request_list.html
-
-- service_request_detail.html
-
-- request_confirm_delete.html
-
-## Detailed Model Documentation
+## Models
 
 ### Home App
 
@@ -363,11 +307,195 @@ Document connects to:
    - Document → ServiceRequest: document.service_request
    - Document → Uploader: document.uploaded_by
 
+
+## Templates/Functionality
+
+### Base.html
+ - Navbar
+  - fixed position header with dark theme
+  - conditional rendering of links based on user authentication status
+  - links to Home, Management, Profiles, Service Requests and Sign In/Register
+  - hamburger menu for authenticated users for better user experience
+
+ - Messages
+  - Django messages framework used to provide feedback to users
+
+ - Footer
+  - fixed position footer with dark theme
+  - copyright information (for the purpose of the project)
+  - social media links with accessibility attributes
+
+### Custom 404.html
+ - extends base.html
+ - 404 error page with simple explanation
+ - return to homepage button
+
+### Home App
+
+- Index.html    
+ - Main section
+  - hero section with main heading and tagline
+  - about us card with company introduction and three core principles
+  - services card with brief introduction to the services offered
+  - call to action button to request services
+  - newsletter signup form for webmarketing
+
+### Management
+
+- management_dashboard.html
+
+- service_request_detail.html
+
+- service_request_management.html
+
+### Profiles
+
+- Profile.html
+
+### Service_Requests
+
+- create_service_request.html
+
+- edit_service_request.html
+
+- service_request_list.html
+
+- service_request_detail.html
+
+- request_confirm_delete.html
+
+
+
+## E-Commerce Functionality
+
+### Initial Setup and DOM Checks
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+const paymentForm = document.getElementById('payment-form');
+const cardElement = document.getElementById('card-element');
+if (paymentForm && cardElement) {
+console.log('Stripe Public Key:', stripePublicKey);
+```
+
+This section:
+- Ensures DOM is fully loaded before initialization
+- Checks for payment form elements
+- Validates required Stripe keys are present
+
+### Stripe Elements Configuration
+
+```javascript
+const stripe = Stripe(stripePublicKey);
+const elements = stripe.elements();
+const card = elements.create('card');
+card.mount('#card-element');
+```
+
+This section:
+- Configures Stripe elements
+- Creates card element
+- Mounts card element to the DOM
+
+### Real-time Card Validation
+
+```javascript
+card.on('change', function(event) {
+const displayError = document.getElementById('card-errors');
+if (event.error) {
+displayError.textContent = event.error.message;
+} else {
+displayError.textContent = '';
+}
+});
+```
+
+Provides:
+- Instant feedback on card input
+- Validation for:
+  - Card number format
+  - Expiry date validity
+  - CVC format
+  - Card type recognition
+- Real-time error messages
+
+### Payment Form Submission
+
+```javascript
+paymentForm.addEventListener('submit', async function(e) {
+e.preventDefault();
+paymentButton.disabled = true;
+try {
+// Create Payment Intent
+const response = await fetch(createPaymentIntentUrl, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'X-CSRFToken': csrfToken
+}
+});
+const data = await response.json();
+if (data.error) {
+handleError(data.error);
+return;
+}
+// Confirm Payment
+const { error, paymentIntent } = await stripe.confirmCardPayment(
+data.clientSecret,
+{
+payment_method: { card: card }
+}
+);
+```
+
+Handles:
+- Form submission prevention
+- Double-submission protection
+- Payment Intent creation
+- CSRF protection
+- Error catching and handling
+
+### Comprehensive Error Handling
+
+```javascript
+if (error) {
+console.error('Payment error:', error);
+const errorDiv = document.getElementById('card-errors');
+errorDiv.textContent = error.message;
+errorDiv.classList.add('alert', 'alert-danger');
+paymentButton.disabled = false;
+} else {
+if (paymentIntent.status === 'succeeded') {
+handleSuccess(data.requestNumber);
+} else {
+handleUnexpectedStatus(paymentIntent.status);
+}
+}
+```
+
+Manages:
+- Card processing errors
+- Network failures
+- Server response errors
+- Unexpected payment states
+- User feedback display
+
+
+
+## Authentication
+
+
 ## Business Model / Marketing Strategy
 
 ### Business Model
 
 ### Facebook mockup
+
+
+## Unfixed Bugs
+
+## Additional Features
+
 
 
 # Testing
@@ -745,3 +873,6 @@ Document connects to:
 - Tests file size limits
 - Verifies successful upload process
 - Confirms error handling
+
+
+## Deployment
