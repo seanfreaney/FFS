@@ -828,7 +828,14 @@ Provides:
 
 ## Unfixed Bugs
 
+- I am unable to get static files pushed to S3 on my deployed site. I have tried several times and have been unable to resolve the issue. I have used the instructions from the Code Institute walkthrough project as well looking at documentation on AWS. Unfortunately This means that the user and management will not be able to upload and download their documents as desired. I understand that this is not ideal, however, I believe that the site is sufficiently functional to facilitate a platform for a small accounting company to manage customers and take payment for services while sharing documents with the customer over email..
+
 ## Additional Features
+
+- Implement static file storage on AWS S3.
+- Implement testimonials section to allow customers to provide reviews.
+- Add a question and answer section in the request detail page to allow users and management to interact and communicatewithin the site.
+- Add invoice creation and management to the management dashboard and allow users to view and download invoices. Currently it could be assumed that invoices would be shared with the customer over email.
 
 
 
