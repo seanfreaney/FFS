@@ -385,8 +385,8 @@ Document connects to:
   - hero section with main heading and tagline
 ![Hero Section](assets/images/hero.png)
   - about us card with company introduction and three core principles
-![About Section](assets/images/about.png)
   - services card with brief introduction to the services offered
+![About Section](assets/images/about.png)
   - call to action button to request services
 ![Call to Action](assets/images/cta-unauth.png)
   - newsletter signup form for webmarketing
@@ -412,11 +412,15 @@ Document connects to:
 
 ### Profiles App
 
+- The profiles app is used to manage user profiles and access service requests.
+
 ### Profile.html
 - The profile page allows the user to update their details and view their service requests.
 ![Profile](assets/images/profile.png)
 
 ### Service_Requests App
+
+- The service requests app is used to create andmanage service requests.
 
 ### create_service_request.html
 - This is the user view of the service request creation page. The page allows the user to input their details and upload a document.
@@ -441,23 +445,33 @@ Document connects to:
 
 ## Authentication
 
-### Sign In
+The project uses Django Allauth for authentication and account management. This provides:
 
+- Secure user authentication
+- User registration with email verification
+- Password reset functionality
+- Robust account management
+
+The authentication templates have been customized to match the site's styling while maintaining Allauth's secure functionality.
+
+### Sign In
+- The sign in page allows the user to sign in to their account.
 ![Sign In](assets/images/sign-in.png)
 
 ### Sign Up
-
+- The sign up page allows the user to create an account.
 ![Sign Up](assets/images/sign-up.png)
 
 ### Password Reset
-
+- The password reset page allows the user to reset their password.
 ![Sign Up Password](assets/images/pword1.png)
 
 ![Sign Up Password](assets/images/pword2.png)
 
 ### Sign Out
-
+- The sign out page allows the user to sign out of their account.
 ![Sign Out](assets/images/sign-out.png)
+
 
 ## E-Commerce Functionality
 
