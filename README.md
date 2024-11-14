@@ -10,18 +10,26 @@ My Goal was to create a website that would allow me to provide a range of servic
 
 It was my intention to keep the design as simple as possible. Initially, i only envisaged a two or three page website. However, as I started to develop the project, I realised that I would need to create more pages and views to manage the functionality that I want to offer to users.
 
-- FFS Wireframes
-![Wireframe](assets/images/wire-home.png)
+#### FFS Wireframes
 
-![Wireframe](assets/images/wire-mgmt.png)
+- Home
+![Homepage Wireframe](assets/images/wire-home.png)
 
-![Wireframe](assets/images/wire-make-request.png)
+- Management View
+![Management View Wireframe](assets/images/wire-mgmt.png)
 
-![Wireframe](assets/images/wire-profile.png)
+- Make Request
+![Create Service Request Wireframe](assets/images/wire-make-request.png)
 
-![Wireframe](assets/images/wire-request-detail.png)
+- Profile
+![Profile Wireframe](assets/images/wire-profile.png)
+
+- Request Detail
+![Request Detail Wireframe](assets/images/wire-request-detail.png)
 
 ## Models
+
+The creation of my wireframes provided a basis for the site's models. I have used Django's default user model. As i began to develop the project, I realised that I would need to create additional models to manage the different aspects of the site.
 
 ### Home App
 
@@ -29,6 +37,8 @@ It was my intention to keep the design as simple as possible. Initially, i only 
 
 Description:
 Manages newsletter subscriptions by storing unique email addresses and subscription dates.
+
+I had not anticipated this model when drafting ERDs.
 
 Fields:
 1. email
@@ -49,6 +59,8 @@ Returns the subscriber's email address
 ### Profiles App
 
 #### UserProfile Model
+
+![UserProfile ERD](assets/images/erd-userprofile.png)
 
 Description:
 Extends the built-in Django User model to store additional user information and delivery details.
@@ -113,6 +125,8 @@ Returns the associated username
 ### Service Requests App
 
 #### ServiceRequest Model
+
+![ServiceRequest ERD](assets/images/erd-servicerequest.png)
 
 Description:
 Core model handling business service requests, quotes, and payment processing.
@@ -197,6 +211,8 @@ Special Functionality:
 
 
 #### Document Model
+
+![Document ERD](assets/images/erd-document.png)
 
 Description:
 Manages document uploads and storage for service requests.
@@ -319,34 +335,54 @@ Document connects to:
 ## Templates/Functionality
 
 ### Base.html
+
+![Base.html](assets/images/base.png)
+
  - Navbar
   - fixed position header with dark theme
   - conditional rendering of links based on user authentication status
   - links to Home, Management, Profiles, Service Requests and Sign In/Register
   - hamburger menu for authenticated users for better user experience
 
+![Navbar](assets/images/header-button-hover-auth.png)
+
+![Navbar](assets/images/header-unauth.png)
+
+![Navbar](assets/images/header-button-hover-unauth.png)
+
+![Navbar](assets/images/header-dropdown-mgmt.png)
+
  - Messages
   - Django messages framework used to provide feedback to users
+
+![Success Message](assets/images/sign-in-success.png)
 
  - Footer
   - fixed position footer with dark theme
   - copyright information (for the purpose of the project)
   - social media links with accessibility attributes
+![Footer](assets/images/footer.png)
 
 ### Custom 404.html
  - extends base.html
  - 404 error page with simple explanation
  - return to homepage button
 
+![404.html](assets/images/404.png)
+
 ### Home App
 
 - Index.html    
  - Main section
   - hero section with main heading and tagline
+![Hero Section](assets/images/hero.png)
   - about us card with company introduction and three core principles
+![About Section](assets/images/about.png)
   - services card with brief introduction to the services offered
   - call to action button to request services
+![Call to Action](assets/images/cta-unauth.png)
   - newsletter signup form for webmarketing
+![Newsletter Signup](assets/images/newsletter.png)
 
 ### Management
 
