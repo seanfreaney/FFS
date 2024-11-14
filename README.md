@@ -13,7 +13,7 @@ It was my intention to keep the design as simple as possible. Initially,
 - FFS Wireframes
 
 
-## Features
+## Templates
 
 ### Base.html
  - Navbar
@@ -69,6 +69,229 @@ It was my intention to keep the design as simple as possible. Initially,
 
 - request_confirm_delete.html
 
+## Detailed Model Documentation
+
+### Home App
+
+#### NewsletterSubscriber Model
+
+Description:
+Manages newsletter subscriptions by storing unique email addresses and subscription dates.
+
+Fields:
+1. email
+   - Type: EmailField
+   - Unique: True
+   - Purpose: Stores subscriber's email address
+   - Prevents duplicate subscriptions
+
+2. date_added
+   - Type: DateTimeField
+   - Auto Now Add: True
+   - Purpose: Automatically records subscription timestamp
+
+String Representation:
+Returns the subscriber's email address
+
+
+### Profiles App
+
+#### UserProfile Model
+
+Description:
+Extends the built-in Django User model to store additional user information and delivery details.
+
+Fields:
+1. user
+   - Type: OneToOneField (User)
+   - On Delete: CASCADE
+   - Purpose: Links profile to Django User
+   - Relationship: One-to-One
+
+2. default_phone_number
+   - Type: CharField
+   - Max Length: 20
+   - Null/Blank: True
+   - Purpose: Stores contact number
+
+3. default_country
+   - Type: CountryField
+   - Blank Label: 'Country *'
+   - Null/Blank: True
+   - Purpose: Stores country selection
+
+4. default_postcode
+   - Type: CharField
+   - Max Length: 20
+   - Null/Blank: True
+   - Purpose: Stores postal code
+
+5. default_town_or_city
+   - Type: CharField
+   - Max Length: 40
+   - Null/Blank: True
+   - Purpose: Stores town/city
+
+6. default_street_address1
+   - Type: CharField
+   - Max Length: 80
+   - Null/Blank: True
+   - Purpose: Stores primary address
+
+7. default_street_address2
+   - Type: CharField
+   - Max Length: 80
+   - Null/Blank: True
+   - Purpose: Stores secondary address
+
+8. default_county
+   - Type: CharField
+   - Max Length: 80
+   - Null/Blank: True
+   - Purpose: Stores county/state
+
+Special Functionality:
+- Signal receiver automatically creates/updates profile when user is created
+- All address fields are optional for flexibility
+
+String Representation:
+Returns the associated username
+
+
+### Service Requests App
+
+#### ServiceRequest Model
+
+Description:
+Core model handling business service requests, quotes, and payment processing.
+
+Fields:
+1. request_number
+   - Type: UUIDField
+   - Primary Key: True
+   - Default: uuid.uuid4
+   - Editable: False
+   - Purpose: Unique identifier for requests
+
+2. user
+   - Type: ForeignKey (User)
+   - On Delete: CASCADE
+   - Purpose: Links request to user
+
+3. business_type
+   - Type: CharField
+   - Max Length: 100
+   - Purpose: Stores business category
+
+4. monthly_revenue
+   - Type: DecimalField
+   - Max Digits: 10
+   - Decimal Places: 2
+   - Purpose: Stores monthly revenue figures
+
+5. monthly_transactions
+   - Type: IntegerField
+   - Purpose: Stores transaction count
+
+6. monthly_operating_costs
+   - Type: DecimalField
+   - Max Digits: 10
+   - Decimal Places: 2
+   - Purpose: Stores operating costs
+
+7. quote_amount
+   - Type: DecimalField
+   - Max Digits: 10
+   - Decimal Places: 2
+   - Null/Blank: True
+   - Purpose: Stores service quote amount
+
+8. quote_accepted
+   - Type: BooleanField
+   - Default: False
+   - Purpose: Tracks quote acceptance
+
+9. status
+   - Type: CharField
+   - Max Length: 20
+   - Choices: STATUS_CHOICES
+   - Purpose: Tracks request status
+
+10. quote_status
+    - Type: CharField
+    - Max Length: 20
+    - Choices: QUOTE_STATUS_CHOICES
+    - Default: 'pending'
+    - Purpose: Tracks quote status
+
+11. created_on
+    - Type: DateTimeField
+    - Auto Now Add: True
+    - Purpose: Records creation timestamp
+
+12. stripe_payment_intent_id
+    - Type: CharField
+    - Max Length: 255
+    - Null/Blank: True
+    - Purpose: Stores Stripe payment ID
+
+13. is_paid
+    - Type: BooleanField
+    - Default: False
+    - Purpose: Tracks payment status
+
+Special Functionality:
+- mark_as_paid() method updates payment status and request status
+
+
+#### Document Model
+
+Description:
+Manages document uploads and storage for service requests.
+
+Fields:
+1. service_request
+   - Type: ForeignKey (ServiceRequest)
+   - On Delete: CASCADE
+   - Related Name: 'documents'
+   - Purpose: Links document to service request
+
+2. file
+   - Type: FileField
+   - Upload To: 'documents/'
+   - Purpose: Stores uploaded file
+
+3. is_bank_statement
+   - Type: BooleanField
+   - Default: True
+   - Purpose: Identifies bank statements
+
+4. uploaded_at
+   - Type: DateTimeField
+   - Auto Now Add: True
+   - Purpose: Records upload timestamp
+
+5. uploaded_by
+   - Type: ForeignKey (User)
+   - On Delete: SET_NULL
+   - Null/Blank: True
+   - Purpose: Tracks who uploaded document
+
+6. document_type
+   - Type: CharField
+   - Max Length: 20
+   - Choices: DOCUMENT_TYPE_CHOICES
+   - Default: 'customer'
+   - Purpose: Categorizes document type
+
+Special Functionality:
+- Automatically deletes old file when updated
+- Custom save method handles file replacement
+
+String Representation:
+Returns document identifier with request number
+
+
 
 ## Business Model / Marketing Strategy
 
@@ -77,13 +300,16 @@ It was my intention to keep the design as simple as possible. Initially,
 ### Facebook mockup
 
 
+# Testing
+
+
 ### Manual Testing Table
 
 | Action    | Expectation | Result | 
 | ---------|:-------------------:|----------|
 | Click 'Home' link | directed to Index.html | Pass |
 
-# Automated Tests Documentation
+## Automated Tests Documentation
 
 ## Profile Tests
 
