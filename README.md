@@ -162,4 +162,74 @@ test_document_upload_validation
 - Validates successful upload scenarios
 - Tests post-upload redirects
 
+The following automated tests are implemented in the profiles views, forms and models  test suite:
 
+### test_form_fields_are_explicit_in_form_metaclass
+```Test that the correct fields are excluded in the form```
+- Validates form metaclass configuration
+- Ensures 'user' field is properly excluded
+
+### test_form_fields_are_present
+```Test that the expected fields are present in the form```
+- Verifies all required profile fields are present
+- Validates presence of address, contact, and location fields
+
+### test_profile_view_redirect_if_not_logged_in
+```Test profile view redirects if user is not logged in```
+- Tests authentication requirements
+- Verifies redirect to login page for unauthenticated users
+
+### test_profile_view_GET
+```Test GET request to profile view```
+- Validates GET request functionality
+- Ensures correct template usage and context data
+
+### test_profile_view_POST_valid_data
+```Test POST request with valid form data```
+- Tests profile update with valid data
+- Verifies success message display and data persistence
+
+### test_profile_view_displays_service_requests
+```Test that service requests are displayed in profile```
+- Tests service request display functionality
+- Verifies correct association with user profile
+
+### test_profile_view_POST_invalid_data
+```Test POST request with invalid form data```
+- Tests form validation for invalid data
+- Verifies error handling and form invalidity
+
+### test_profile_view_POST_empty_data
+```Test POST request with empty data```
+- Tests handling of empty form submission
+- Validates optional field behavior
+
+### test_service_requests_ordered_by_created_on
+```Test that service requests are displayed in correct order```
+- Tests chronological ordering of service requests
+- Verifies newest-first sorting
+
+### test_on_profile_page_context
+```Test that on_profile_page context is True```
+- Tests profile page context variable
+- Verifies correct page identification
+
+### test_profile_view_with_no_service_requests
+```Test profile view when user has no service requests```
+- Tests profile display without service requests
+- Verifies empty state handling
+
+### test_profile_str_method
+```Test the string representation of the UserProfile model```
+- Tests string representation of UserProfile
+- Validates correct username display
+
+### test_profile_created_on_user_creation
+```Test that a UserProfile is automatically created when a User is created```
+- Tests automatic profile creation
+- Verifies user-profile relationship
+
+### test_profile_fields_are_optional
+```Test that all profile fields except user are optional```
+- Tests optional field configuration
+- Validates field flexibility and default values
