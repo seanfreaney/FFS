@@ -71,3 +71,95 @@ It was my intention to keep the design as simple as possible. Initially,
 
 
 ## Business Model / Marketing Strategy
+
+
+### Manual Testing Table
+
+| Action    | Expectation | Result | 
+| ---------|:-------------------:|----------|
+| Click 'Home' link | directed to Recipe List | Pass |
+
+## Automated Tests
+
+The following automated tests are implemented in the management views test suite:
+
+### Access Control and Dashboard Tests
+```python
+test_management_dashboard_view
+```
+- Validates dashboard access control mechanisms
+- Ensures non-staff users are properly redirected
+- Verifies staff users can access dashboard
+- Confirms correct template rendering
+
+### Service Request Management Tests
+```python
+test_service_request_management_view
+```
+- Tests service request listing functionality
+- Validates access control for staff/non-staff users
+- Verifies request filtering by status
+- Ensures proper display of service requests
+
+```python
+test_service_request_detail_view
+```
+- Tests individual service request detail views
+- Validates access restrictions
+- Verifies correct context data provision
+- Tests staff access permissions
+
+### Document Management Tests
+```python
+test_upload_owner_document_view
+```
+- Validates document upload functionality
+- Tests access control for uploads
+- Verifies successful file upload scenarios
+- Tests handling of missing file submissions
+
+### Data Manipulation Tests
+```python
+test_service_request_detail_post
+```
+- Tests service request update functionality
+- Validates status updates
+- Verifies quote amount modifications
+- Tests invalid input handling
+
+### Dashboard Statistics Tests
+```python
+test_management_dashboard_counts
+```
+- Validates dashboard statistics accuracy
+- Tests request counting by status
+- Verifies correct statistical displays
+- Ensures accurate data representation
+
+### Sorting and Ordering Tests
+```python
+test_service_request_management_date_ordering
+```
+- Tests date-based request sorting
+- Validates newest-first ordering
+- Verifies oldest-first ordering
+- Ensures correct sequence maintenance
+
+### User Feedback Tests
+```python
+test_success_messages
+```
+- Validates system feedback mechanisms
+- Tests success message display
+- Verifies user notification functionality
+
+### File Upload Validation Tests
+```python
+test_document_upload_validation
+```
+- Tests document upload validation
+- Verifies file upload functionality
+- Validates successful upload scenarios
+- Tests post-upload redirects
+
+
