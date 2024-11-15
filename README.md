@@ -458,8 +458,6 @@ Document connects to:
 
 - Base.html is the base template for all pages and provides a consistent structure for the website.
 
-![Base.html](assets/images/base.png)
-
  - Navbar
   - fixed position header with dark theme
   - conditional rendering of links based on user authentication status
