@@ -966,8 +966,11 @@ Key Aspects of the Business Model
 
 5. Special Offers and Discounts: Including limited-time offers, such as a discount on tax preparation services for new clients or referrals, can encourage engagement and expand the client base.
 
+I am noting that in the Project Portfolio 5 course materials a free version of mailchimp is used. As there is no longer a free version of mailchimp I have used a NewsletterSubscriber model which is linked to my database. I am assuming that this will not affect my grade as I think it is unreasonable to expect students to pay for additional services over and above tuition fees.
+
 ### Facebook mockup
 
+![Facebook mockup](docs/images/fb.png)
 
 ## Unfixed Bugs
 
@@ -1391,6 +1394,8 @@ Key Aspects of the Business Model
 
 
 ## Deployment
+
+I have used Heroku for my deployed site. Deployment procedures are as follows:
 
 ### Fork the Repository
 1. Navigate to the [repository](https://github.com/freaney-financial-services/ffs)
