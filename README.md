@@ -968,7 +968,7 @@ I am noting that in the Project Portfolio 5 course materials a free version of m
 
 ### Facebook mockup
 
-![Facebook mockup](docs/images/fb.png)
+![Facebook mockup](assets/images/fb.png)
 
 ## Unfixed Bugs
 
